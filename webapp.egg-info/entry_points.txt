@@ -1,0 +1,5 @@
+      [paste.app_factory]
+      main = webapp:main
+      [console_scripts]
+      initialize_webapp_db = webapp.scripts.initializedb:main
+      
