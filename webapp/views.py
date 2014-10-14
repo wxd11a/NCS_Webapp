@@ -10,11 +10,13 @@ from pyramid.view import view_config, forbidden_view_config
 
 from sqlalchemy.exc import DBAPIError
 
-from .models import (
-    DBSession,
-    MyModel,
-    pages,
-    )
+#from .models import (
+#    DBSession,
+#    MyModel,
+#    pages,
+#    )
+
+from .models import DBSession, Page
 from .security import USERS
 
 
@@ -49,6 +51,7 @@ class ClientViews(object):
     def reqts(self):
         return self.wiki_form.get_widget_resources()
 
+    # Will also need a Practitioner view
     @view_config(route_name='client_view',
                 renderer='templates/client_view.pt')
     def client_view(self):
@@ -59,7 +62,8 @@ class ClientViews(object):
                 permission='edit',
                 renderer='templates/clientpage_addedit.pt')
     def clientpage_add(self):
-        form = self.client_form.render()
+        # Douglas, previous form call
+        #form = self.client_form.render()
 
         if 'submit' in self.request.params:
             controls = self.request.POST.items()
@@ -69,13 +73,14 @@ class ClientViews(object):
                 # Form is NOT valid
                 return dict(title='Add Client Page', form=e.render())
 
-            # Form is valid, make a new identifier and add to list
-            last_uid = int(sorted(pages.keys())[-1])
-            new_uid = str(last_uid+1)
-            pages[new_uid] = dict(
-                    uid=new_uid, title=appstruct['title'],
-                    body=appstruct['body']
-            )
+            # Add a new page to the DB
+            new_title = appstruct['title']
+            new_body = appstruct['body']
+            DBSession.add(Page(new_title, new_body))
+
+            # Get the new ID and redirect
+            page = DBSession.query(Page).filter_by(title=new_title).one()
+            new_uid = page.uid
 
             # Now visit new page
             url = self.request.route_url('clientpage_view', uid=new_uid)
@@ -87,7 +92,8 @@ class ClientViews(object):
                 renderer='templates/clientpage_view.pt')
     def clientpage_view(self):
         uid = self.request.matchdict['uid']
-        page = pages[uid]
+        page = DBSession.query(Page).filter_by(uid=uid).one()
+
         return dict(page=page, title=page['title'])
 
     @view_config(route_name='clientpage_edit',

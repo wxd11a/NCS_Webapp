@@ -36,5 +36,7 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        model = MyModel(name='one', value=1)
+        # ori was model = MyModel(name='one', value=1)
+        #model = MyModel(name='one', value=1)
+        model = Page(title='Root', body='<p>Root</p>')
         DBSession.add(model)
