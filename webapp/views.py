@@ -49,7 +49,7 @@ class ClientViews(object):
 
     @reify
     def reqts(self):
-        return self.wiki_form.get_widget_resources()
+        return self.client_form.get_widget_resources()
 
     # Will also need a Practitioner view
     @view_config(route_name='client_view',
