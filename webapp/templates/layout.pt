@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:metal="http://xml.zope.org/namespace/metal"
-	xmlns:tal="http://xml.zope.org/namespace/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
 	metal:define-macro="layout">
 
 <head>
@@ -17,7 +17,7 @@
 			<a tal:condition="view.logged_in is None" href="${request.application_url}/login">Log In</a>
 		</div>
 		<h1>
-			<a href="${request.route_url('client)view')}">
+			<a href="${request.route_url('client_view')}">
 				<img src="${request.static_url('webapp:static/logo.png')}" alt="Logo"/></a>
 			${title}</h1>
 
