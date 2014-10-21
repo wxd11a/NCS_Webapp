@@ -26,6 +26,7 @@ def usage(argv):
 
 
 def main(argv=sys.argv):
+    # Pyramid site has it as "if len(argv) != 2;
     if len(argv) < 2:
         usage(argv)
     config_uri = argv[1]
