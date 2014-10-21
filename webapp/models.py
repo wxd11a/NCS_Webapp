@@ -47,7 +47,7 @@ class Page(Base):
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
-                (allow, 'group:editors', 'edit')]
+                (Allow, 'group:editors', 'edit')]
 
     def __init__(self, request):
         pass

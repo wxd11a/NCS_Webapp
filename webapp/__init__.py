@@ -4,13 +4,15 @@ from pyramid.config import Configurator
 
 from sqlalchemy import engine_from_config
 
+from .models import DBSession, Base
+
 from .security import groupfinder
 
-from .models import (
-    DBSession,
-    Base,
-    )
-
+#from .models import (
+#    DBSession,
+#    Base,
+#    )
+#
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -26,9 +28,6 @@ def main(global_config, **settings):
     authn_policy = AuthTktAuthenticationPolicy(
             'sosecret', callback=groupfinder, hashalg='sha512')
     authz_policy = ACLAuthorizationPolicy() 
-#   The tutorial wants this again. Why?
-#    config = Configurator(settings=settings,
-#                            root_factory='webapp.models.Root')
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
 
@@ -37,9 +36,9 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_route('clientpage_add', '/add')
     config.add_route('clientpage_view', '/{uid}')
-    config.add_route('clientpage_add', '/{uid}/edit')
-    config.add_route('clientpage_add', '/{uid}/delete')
-    config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_route('clientpage_edit', '/{uid}/edit')
+    config.add_route('clientpage_delete', '/{uid}/delete')
+    config.add_static_view(name='static', path='webapp:static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static/')
 
     config.scan()

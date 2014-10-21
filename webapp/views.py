@@ -55,8 +55,8 @@ class ClientViews(object):
     @view_config(route_name='client_view',
                 renderer='templates/client_view.pt')
     def client_view(self):
-        return dict(title='Welcome to the Client Page',
-                    pages=pages.values())
+        pages = DBSession.query(Page).order_by(Page.title)
+        return dict(title='Welcome to the Client Page', pages=pages)
 
     @view_config(route_name='clientpage_add',
                 permission='edit',
@@ -69,7 +69,7 @@ class ClientViews(object):
             controls = self.request.POST.items()
             try:
                 appstruct = self.client_form.validate(controls)
-            except deform.ValidationFailture as e:
+            except deform.ValidationFailure as e:
                 # Form is NOT valid
                 return dict(title='Add Client Page', form=e.render())
 
@@ -86,7 +86,7 @@ class ClientViews(object):
             url = self.request.route_url('clientpage_view', uid=new_uid)
             return HTTPFound(url)
 
-        return dict(title='Add Client Page', form=form)
+        return dict(title='Add Client Page', form=self.client_form.render())
 
     @view_config(route_name='clientpage_view',
                 renderer='templates/clientpage_view.pt')
@@ -100,35 +100,35 @@ class ClientViews(object):
                 permission='edit',
                 renderer='templates/clientpage_addedit.pt')
     def clientpage_edit(self):
-        uid = self.request.matchdict['uid']
-        page = pages[uid]
-        title = 'Edit ' + page['title']
+        uid = int(self.request.matchdict['uid'])
+        page = DBSession.query(Page).filter_by(uid=uid).one()
+        title = 'Edit ' + page.title
 
-        client_form = self.client_form
+#        client_form = self.client_form
 
         if 'submit' in self.request.params:
             controls = self.request.POST.items()
             try:
-                appstruct = client_form.validate(controls)
+                appstruct = self.client_form.validate(controls)
             except deform.ValidationFailure as e:
                 return dict(title=title, page=page, form=e.render())
 
             # Change the content and redirect to the view
-            page['title'] = appstruct['title']
-            page['body'] = appstruct['body']
+            page.title = appstruct['title']
+            page.body = appstruct['body']
 
-            url = self.request.route_url('clientpage_view',
-                                        uid=page['uid'])
+            url = self.request.route_url('clientpage_view', uid=uid)
             return HTTPFound(url)
 
-        form = client_form.render(page)
+        form = self.client_form.render(dict(uid=page.uid, title=page.title, body=page.body))
 
         return dict(page=page, title=title, form=form)
 
     @view_config(route_name='clientpage_delete', permission='edit')
     def clientpage_delete(self):
-        uid = self.request.matchdict['uid']
-        del pages[uid]
+        uid = int(self.request.matchdict['uid'])
+        page = DBSession.query(Page).filter_by(uid=uid).one()
+        DBSession.delte(page)
 
         url = self.request.route_url('client_view')
         return HTTPFound(url)
@@ -138,7 +138,7 @@ class ClientViews(object):
     def login(self):
         request = self.request
         login_url = request.route_url('login')
-        referrer = request.referer
+        referrer = request.url
         if referrer == login_url:
             referrer = '/' # never use login form itself as came_from
         came_from = request.params.get('came_from', referrer)
@@ -166,7 +166,7 @@ class ClientViews(object):
     def logout(self):
         request = self.request
         headers = forget(request)
-        url = reuqest.route_url('client_view')
+        url = request.route_url('client_view')
         return HTTPFound(location=url,
                         headers=headers)
 
