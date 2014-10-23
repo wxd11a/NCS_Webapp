@@ -76,6 +76,49 @@ class Individ_Info(Base):
     military_branch = Column(Text)
     currently_active = Column(Integer) # Need to incorporate NOT NULL
 
+class Education(Base):
+    professional_degree_institution = Column(Text) # NOT NULL
+    institution_address = Column(Text) # Not NULL
+    institution_city = Column(Text) # NOT NULL
+    institution_state_or_country = Column(Text) # Not null
+    institution_postal_code = Column(Text) # NOT NULL
+    degree = Column(Text) # NOT NULL
+    attendence_dates = Column(Text) # NOT NULL
+    extra_degree = Column(Integer)
+    post_grad_edu = Column(Integer)
+    post_grad_specialty = Column(Text)
+    post_grad_institution = Column(Text)
+    post_grad_institution_address = Column(Text)
+    post_grad_institution_city = Column(Text)
+    post_grad_institution_state_or_country = Column(Text)
+    post_grad_institution_postal_code = Column(Text)
+    post_grad_institution_degree = Column(Text)
+    post_grad_institution_completion = Column(Integer)
+    post_grad_institution_attendance = Column(Text)
+    post_grad_institution_director = Column(Text)
+    post_grad_institution_current_director = Column(Text)
+    post_grad_edu_two = Column(Integer)
+    post_grad_specialty_two = Column(Text)
+    post_grad_institution_two = Column(Text)
+    post_grad_institution_two_address = Column(Text)
+    post_grad_institution_two_city = Column(Text)
+    post_grad_institution_two_state_or_country = Column(Text)
+    post_grad_institution_two_postal_code = Column(Text)
+    post_grad_institution_two_degree = Column(Text)
+    post_grad_institution_two_completion = Column(Integer)
+    post_grad_institution_two_attendance = Column(Text)
+    post_grad_institution_two_director = Column(Text)
+    post_grad_institution_two_current_director = Column(Text)
+    post_grad_extra_training = Column(Integer)
+    professional_degree_institution_extra = Column(Text)
+    professional_degree_institution_extra_address = Column(Text)
+    professional_degree_institution_extra_city = Column(Text)
+    professional_degree_institution_extra_state_or_country = Column(Text)
+    professional_degree_institution_extra_postal_code = Column(Text)
+    professional_degree_extra_degree = Column(Text)
+    professional_degree_extra_attendance_dates = Column(Text)
+
+
 # Douglas, ignore this was testing a simple DB call
 #pages = {
 #    '100': dict(uid='100', title='Page 100', body'<em>100</em>'),
