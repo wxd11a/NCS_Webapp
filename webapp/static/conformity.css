@@ -1,0 +1,507 @@
+@charset "utf-8"
+
+/*@font-face {
+	font-family: 'NotoSans',sans-serif;
+	url("http://fonts.googleapis.com/css?family=Noto+Sans:400,700");
+}*/
+
+/*
+ *
+ The Basics
+ *
+ */
+
+html, body{
+	height:100%;
+	overflow-x: hidden;
+
+/*	margin: 0px;
+	padding: 0px; */
+}
+
+html {
+	overflow-y:scroll;
+	height: 100% !important;
+	background-color: rgb(255,255,255);
+	margin-bottom: 1px;
+	background-color: #26305C;
+}
+
+body {
+/*	font: Verdana, Arial, Helvetica, sans-serif; */
+	font-family: 'Noto Sans', 'DejaVu', sans-serif;
+	background-color: #26305C;
+	min-height:80% !important;
+	width:100%;
+/*	margin:8% 0% 0% 0%; */
+	padding-bottom: 40px;
+	/*overflow-y:hidden;*/
+	scroll:no;
+	color: /*#000000;*/
+}
+
+/*
+ *
+ Text styles
+ *
+ */
+ 
+h1, h2, h3, h4, h5, h6, p {
+
+}
+
+h1 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+h2 {
+
+}
+h2.title {
+	margin: 0px;
+}
+
+h3 {
+
+}
+
+h3.title {
+	font-weight: normal;
+
+	margin: 0px;
+}
+
+h3.topic {
+	color: #998100;
+}
+
+h4 {
+
+}
+
+h4.page {
+	color: rgb(0,0,0);
+	margin: 0px;
+	text-align: center;
+}
+
+h5 {
+
+}
+
+h6 {
+
+}
+
+p {
+
+}
+
+
+/*
+ *
+ Alignment
+ *
+ */
+ 
+/* Useful to deal with sizing problems that occur when using padding and/or borders */
+/* div {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	width:50%;
+	float:left;
+} */
+
+#flexcontainer_row {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	align-content: space-between;
+
+	width: 100%;
+
+}
+
+.col_st {
+	background-image:url('http://alchemycredentialing.com/wp-content/thesis/skins/classic-r/images/subtle_white_feathers.png');
+
+	order: 1;
+	flex: 0 1 auto;
+/*	flex-basis: auto;
+	flex-basis: main-size;
+	flex-grow: 1; */
+	border: 1px solid; 
+	border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px;
+	
+	padding: 8px;
+
+/*	background-color: rgb(253,245,230); */
+	background-color: rgb(240,232,217);	
+}
+
+.col1 {
+	background-image:url('http://alchemycredentialing.com/wp-content/thesis/skins/classic-r/images/subtle_white_feathers.png');
+
+	order: 1;
+	flex: 0 1 auto;
+/*	flex-basis: auto;
+	flex-basis: main-size;
+	flex-grow: 1; */
+	border: 1px solid; 
+	border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px;
+
+	box-shadow: 0px 0px 10px #000000; /* #bababa */
+	
+	padding: 8px;
+
+	width: 33%;
+/*	background-color: rgb(253,245,230); */
+	background-color: rgb(240,232,217);	
+}
+
+.col2 {	
+	background-image:url('http://alchemycredentialing.com/wp-content/thesis/skins/classic-r/images/subtle_white_feathers.png');
+
+	order: 2;
+	flex: 0 1 auto;
+/*	flex-basis: auto;
+	flex-basis: main-size;
+	flex-grow: 1; */
+	border: 1px solid;
+	border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px;
+
+	box-shadow: 0px 0px 10px #000000; /* #bababa */
+
+	margin: 0 20px;
+	padding: 8px;
+	
+	width: 33%;
+/*	background-color: rgb(253,245,230); */
+	background-color: rgb(240,232,217);	
+	
+}
+
+.col3 {	
+	background-image:url('http://alchemycredentialing.com/wp-content/thesis/skins/classic-r/images/subtle_white_feathers.png');
+
+	order: 3;
+	flex: 0 1 auto;
+/*	flex-basis: auto;
+	flex-basis: main-size;
+	flex-grow: 1; */
+	border: 1px solid;
+	border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px;
+	
+	box-shadow: 0px 0px 10px #000000; /* #bababa */
+	
+	padding: 8px;
+
+	width: 33%;
+/*	background-color: rgb(253,245,230); */
+	background-color: rgb(240,232,217);	
+	
+}
+
+div#top-panel {
+	position: absolute; /* changed to fixed for it to scroll with browser window */
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	background: rgb(224,224,224);
+	text-align: right;
+
+}
+
+div#top-panel > a {
+	margin-right: 50px;
+}
+
+header, footer {
+	display: block;
+	margin: 0px;
+/*	padding: 5px; */
+/*	min-height: 50px; */
+	border 1px solid /*color*/;
+	/*border-radius: 7pt;*/
+	background: /* color */;
+}
+
+header {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height:auto;
+/*	margin-top: 0px; 
+	padding-bottom: 20px; */
+	padding: 5px;
+	border-bottom: 3px solid #998100;
+/*	background-color: rgb(253,245,230); */
+	background-color: rgb(88,89,91);
+	/* Flexbox */
+	display: -webkit-flex;
+	display:	 flex;
+	-webkit-flex-flow: row;
+		flex-flow: row;
+
+}
+
+header > #header-left {
+	height: 100%;
+	width: 400px;
+	
+	color: white;
+	text-shadow: #998100 -2px;
+	text-align:center;
+	border-right: 2px solid black;
+
+	-webkit-order: 1;
+		order: 1;
+}
+
+header > #header-mid {
+
+}
+
+footer {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+	-webkit-align-self: flex-end;
+	align-self: flex-end;
+/*	margin-top: 40px; */
+	height: 40px;
+	width: 100%;
+	clear: both;
+
+	background-image:url('http://alchemycredentialing.com/wp-content/thesis/skins/classic-r/images/subtle_white_feathers.png');
+	background-color: rgb(253,245,230); /*rgb(255,250,239)*/
+	border-top: 3px solid #998100;
+	text-align: center;
+
+	/*border-radius: 7pt;*/
+
+}
+
+#main {
+/*	background: #FFFFFF; */
+	min-height: 400px;
+	width:70%;
+	margin: 85px auto 0;
+/*	padding-bottom: 40px; */
+	display: -webkit-flex;
+	display: 	 flex;
+	-webkit-flex-flow: column;
+		flex-flow: column;
+}
+/* was #main > nav */
+nav {
+	/* display in nav is for making nav a parent to each child links */
+	/*display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;*/
+	display: -webkit-flex;
+	display:	 flex;
+	-webkit-direction-flow: row;
+		flex-direction: row;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
+	width: 80%; /* remove this to push nav back to the left */
+	margin: 7px;
+	margin-top: 10px;
+	padding: 0px;
+	/*background: rgb(255,255,255);*/
+	/*border-radius: 7pt; */
+	/*border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px; */
+	/*background: /* color */
+	/*-webkit-flex: 1 6 20%;
+		flex: 1 6 20%; */
+	-webkit-order: 2;
+		order: 2; 
+
+}
+
+nav a {
+	/*color: rgb(66,114,167);*/
+	color: rgb(62,130,204);
+	font-weight: bold;
+	text-decoration: none;
+
+/*	text-shadow: 1px 1px 2px #998100; */
+}
+
+/*nav a:visited {
+	color: rgb(62,130,204);
+/*	color: rgb(66,114,167); */
+/*} */
+
+nav a:hover {
+/*	color: #FFDA73;*/ /* FFDA73, 4272A7 */
+	color: #BCC5D0;
+}
+
+nav > #link1 {
+	margin: auto 10px;
+	padding: 10px;	
+/*	margin: 10px;
+	padding: 10px; */
+}
+
+
+nav > #link2 {
+	margin: auto 10px;
+	padding: 10px;	
+/*	margin: 10px;
+	padding: 10px; */
+}
+
+nav > #link3 {
+	margin: auto 10px;
+	padding: 10px;	
+/*	margin: 10px;
+	padding: 10px; */
+}
+
+nav > #link4 {
+	margin: auto 10px;
+	padding: 10px;	
+/*	margin: 10px;
+	padding: 10px; */
+}
+
+nav > #link5 {
+	margin: auto 10px;
+	padding: 10px;	
+/*	margin: 10px;
+	padding: 10px; */
+}
+
+.nav-link-align {
+	margin: auto 10px;
+	padding: 10px;	
+}
+
+.link-highlight {
+	color: #998100;
+}
+
+
+#main > #scrolling_images {
+	margin: 4px;
+	padding: 5px;
+/*	background-color: rgb(253,245,230);*/ /*rgb(255,250,239)*/ 
+	background-color: rgb(240,232,217);
+	border: 1px solid;
+	border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px;
+
+	box-shadow: 0px 0px 10px #000000; /* #bababa */
+	background: /* gold? */
+	-webkit-flex: 3 1 60%;
+		flex: 3 1 60%;
+	-webkit-order: 1;
+		order: 1;
+}
+
+
+#main > #full_content {
+	background-image:url('http://alchemycredentialing.com/wp-content/thesis/skins/classic-r/images/subtle_white_feathers.png');
+
+	margin: 4px;
+	padding: 5px;
+/*	background-color: rgb(253,245,230);*/ /*rgb(255,250,239)*/ 
+	background-color: rgb(240,232,217);
+	border: 1px solid;
+	border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px;
+
+	box-shadow: 0px 0px 10px #000000; /* #bababa */
+	background: /* gold? */
+	-webkit-flex: 3 1 60%;
+		flex: 3 1 60%;
+	-webkit-order: 1;
+		order: 2;
+}
+
+/* transitions to next image smoothly */
+.slider {
+ /*
+  * position: relative;
+  * z-index:1;
+  * width: 944px;
+  * height: 391px;
+  * */
+}
+
+.slider .items {
+	display:none;
+}
+
+.slider .items ul {
+	list-style-type: none;
+}
+
+
+#main > #flexcontainer_row {
+/*	margin: 4px; */
+	padding: 5px 5px 5px 0px;
+	background: transparent;
+/*	border: 1px solid;
+	border-bottom-left-radius: 9.33333px;
+	border-bottom-right-radius: 9.33333px;
+	border-top-left-radius: 9.33333px;
+	border-top-right-radius: 9.33333px; */
+	background: /* color */;
+	-webkit-flex: 1 6 20%;
+		flex: 1 6 20%;
+	-webkit-order: 3;
+		order: 3;
+}
+
+/* For mobile devices or small screens */
+@media all and (max-width: 640px) {
+
+#main, #page {
+	-webkit-flex-flow: column;
+		flex-flow: column;
+		flex-direction: column;
+}
+
+#main > article, #main > nav, #main > aside {
+	-webkit-order: 0;
+		order: 0;
+}
+
+#main > nav, #main > aside, footer {
+	min-height: 50px;
+	max-height: 50px;
+}
+}
