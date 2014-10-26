@@ -28,12 +28,13 @@ Base = declarative_base()
 
 
 # Douglas, lookup cryptacular for strong one-way encryption for hashed passwords.
-class User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    name = Column(Unicode(255), unique=True, nullable=False)
-    password = Column(unicode(255), nullable=False)
-    last_logged = Column(DateTime, default=datetime.datetime.utcnow)
+# Douglas, do I want users within .models or .security?
+#class User(Base):
+#    __tablename__ = 'users'
+#    id = Column(Integer, primary_key=True)
+#    name = Column(Unicode(255), unique=True, nullable=False)
+#    password = Column(unicode(255), nullable=False)
+#    last_logged = Column(DateTime, default=datetime.datetime.utcnow)
 
 
 #class MyModel(Base):

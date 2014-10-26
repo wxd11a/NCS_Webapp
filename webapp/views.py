@@ -16,7 +16,7 @@ from sqlalchemy.exc import DBAPIError
 #    pages,
 #    )
 
-from .models import DBSession, Page
+from .models import DBSession, Individ_Info, Education, Licence_Certificates
 from .security import USERS
 
 
