@@ -5,6 +5,9 @@ from sqlalchemy import (
     Index,
     Integer,
     Text,
+    Unicode,
+    UnicodeText,
+    Datetime
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,8 +19,21 @@ from sqlalchemy.orm import (
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
+# (From Pyramid-blogr) The first line initializes sqlalchemy's threaded session maker - we will use it to interact with [the] database and persist our changes to the databse.
+# It is thread-safe meaning that it will handle multipel requests at [the] same time in a safe way, and our code from different views will not impact other requests.
+# It will also open and close database connections for us transparently when needed.
+# http://pyramid-blogr.readthedocs.org/en/latest/basic_models.html
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
+
+
+# Douglas, lookup cryptacular for strong one-way encryption for hashed passwords.
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(255), unique=True, nullable=False)
+    password = Column(unicode(255), nullable=False)
+    last_logged = Column(DateTime, default=datetime.datetime.utcnow)
 
 
 #class MyModel(Base):
@@ -39,7 +55,7 @@ class Page(Base):
         self.body = body
 
 class Individ_Info(Base):
-    __tablename__ = 'Individ_Info'
+    __tablename__ = 'individ_info'
 #    uid = Column(Integer, 
     application_id = Column(Integer, primary_key=True)
     type_professional = Column(Text) # Need to incorporate NOT NULL
@@ -77,6 +93,7 @@ class Individ_Info(Base):
     currently_active = Column(Integer) # Need to incorporate NOT NULL
 
 class Education(Base):
+    __tablename__ = 'education'
     professional_degree_institution = Column(Text) # NOT NULL
     institution_address = Column(Text) # Not NULL
     institution_city = Column(Text) # NOT NULL
@@ -119,6 +136,7 @@ class Education(Base):
     professional_degree_extra_attendance_dates = Column(Text)
 
 class License_Certificates(Base):
+    __tablename__ = 'license_certificates'
     license_type_one = Column(Text)
     license_number_one = Column(Text)
     license_registration_one = Column(Text)
@@ -159,13 +177,6 @@ class License_Certificates(Base):
     ecfmg_number = Column(Text)
     ecfmg_date_of_issue = Column(Text)
 
-
-# Douglas, ignore this was testing a simple DB call
-#pages = {
-#    '100': dict(uid='100', title='Page 100', body'<em>100</em>'),
-#    '101': dict(uid='101', title='Page 101', body'<em>101</em>'),
-#    '102': dict(uid='102', title='Page 102', body'<em>102</em>'),
-#}
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),

@@ -40,5 +40,6 @@ def main(argv=sys.argv):
     with transaction.manager:
         # ori was model = MyModel(name='one', value=1)
         #model = MyModel(name='one', value=1)
+        # Douglas, change model = ... to suit the new DB. Possibly with a users table for authentication.
         model = Page(title='Root', body='<p>Root</p>')
         DBSession.add(model)
