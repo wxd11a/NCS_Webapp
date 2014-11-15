@@ -110,6 +110,23 @@ class Education_Background(Base):
     degree = Column(Text)
     attendence_dates(Text)
 
+class Post_Grad(Base):
+    post_grad_id = Column(Integer, primary_key=True)
+    internship = Column(Integer)
+    residency = Column(Integer)
+    fellowship = Column(Integer)
+    taching_appt = Column(Integer) # wat
+    post_grad_specialty = Column(Text)
+    post_grad_institution = Column(Text)
+    post_grad_address = Column(Text)
+    post_grad_institution_city = Column(Text)
+    post_grad_institution_state_or_country = Column(Text)
+    post_grad_institution_postal_code = Column(Text)
+    post_grad_institution_degree = Column(Text)
+    post_grad_institution_completion = Column(Integer)
+    post_grad_institution_attendance = Column(Text)
+    post_grad_institution_director = Column(Text)
+    post_grad_institution_current_director = Column(Text)
 
 #class Individ_Info(Base):
 #    __tablename__ = 'individ_info'
