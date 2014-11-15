@@ -62,8 +62,9 @@ class Page(Base):
 
 class Individ_Info(Base):
     __tablename__ = 'individ_info'
-
-    application_id = Column(Integer, primary_key=True)
+    
+    # Changed application_id to id because it is too verbose and can be identified by its class when called
+    id = Column(Integer, primary_key=True)
     reference = Column(Integer)
     type_professional = Column(Text)
     last_name = Column(Text)
@@ -100,7 +101,11 @@ class Individ_Info(Base):
     currently_active = Column(Integer)
 
 class Education_Background(Base):
-    edu_id = Column(Integer)
+    __tablename__ = 'education_background'
+
+    # Douglas, added the id since edu_id is the FK. Changed edu_id to app_id since that is what it references
+    id = Column(Integer, primary_key=True)
+    app_id = Column(Integer, ForeignKey('individ_info.id'))
     # FOREIGN KEY (edu_id) REFERENCES Individ_Info(application_id)
     professional_degree_institution = Column(Text)
     institution_address = Column(Text)
@@ -108,10 +113,13 @@ class Education_Background(Base):
     institution_state_or_country = Column(Text)
     institution_postal_code = Column(Text)
     degree = Column(Text)
-    attendence_dates(Text)
+    attendance_dates = Column(Text)
 
 class Post_Grad(Base):
-    post_grad_id = Column(Integer, primary_key=True)
+    __tablename__ = 'post_grad'
+    
+    # Douglas, changed post_grad_id to id because it will be recognized as post_grad.id when called
+    id = Column(Integer, primary_key=True)
     internship = Column(Integer)
     residency = Column(Integer)
     fellowship = Column(Integer)
@@ -129,8 +137,10 @@ class Post_Grad(Base):
     post_grad_institution_current_director = Column(Text)
 
 class Individ_PG(Base):
-    ind_id = Column(Integer)
-    pg_id = Column(Integer)
+    __tablename__ = 'individ_pg'
+
+    ind_id = Column(Integer, ForeignKey('individ_info.id'))
+    pg_id = Column(Integer, ForeignKey('post_grad.id'))
     # FOREIGN KEY (Ind_ID) REFERENCES Individ_Info(application_id)
     # FOREIGN KEY (PG_ID) REFERENCES Post_Grad(post_grad_id)
 

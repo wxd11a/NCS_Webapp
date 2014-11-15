@@ -14,8 +14,11 @@ from pyramid.scripts.common import parse_vars
 from ..models import (
     DBSession,
     Page,
-    Individ_Info
-    Base,
+    Individ_Info,
+    Education_Background,
+    Post_Grad,
+    Individ_PG,
+    Base
     )
 
 
