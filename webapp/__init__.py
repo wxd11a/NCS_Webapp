@@ -34,10 +34,10 @@ def main(global_config, **settings):
     config.add_route('client_view', '/')
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
-    config.add_route('clientpage_add', '/add')
+    #config.add_route('clientpage_add', '/add')
     config.add_route('clientpage_view', '/{uid}')
-    config.add_route('clientpage_edit', '/{uid}/edit')
-    config.add_route('clientpage_delete', '/{uid}/delete')
+    #config.add_route('clientpage_edit', '/{uid}/edit')
+    #config.add_route('clientpage_delete', '/{uid}/delete')
     config.add_static_view(name='static', path='webapp:static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static/')
 

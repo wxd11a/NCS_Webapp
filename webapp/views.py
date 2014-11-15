@@ -16,7 +16,7 @@ from sqlalchemy.exc import DBAPIError
 #    pages,
 #    )
 
-from .models import DBSession, Individ_Info, Education, Licence_Certificates
+from .models import DBSession, Page, Individ_Info, Education, License_Certificates
 from .security import USERS
 
 
@@ -51,42 +51,41 @@ class ClientViews(object):
     def reqts(self):
         return self.client_form.get_widget_resources()
 
-    # Will also need a Practitioner view
     @view_config(route_name='client_view',
                 renderer='templates/client_view.pt')
     def client_view(self):
         pages = DBSession.query(Page).order_by(Page.title)
         return dict(title='Welcome to the Client Page', pages=pages)
 
-    @view_config(route_name='clientpage_add',
-                permission='edit',
-                renderer='templates/clientpage_addedit.pt')
-    def clientpage_add(self):
-        # Douglas, previous form call
-        #form = self.client_form.render()
+    #@view_config(route_name='clientpage_add',
+    #            permission='edit',
+    #            renderer='templates/clientpage_addedit.pt')
+    #def clientpage_add(self):
+    #    # Douglas, previous form call
+    #    #form = self.client_form.render()
 
-        if 'submit' in self.request.params:
-            controls = self.request.POST.items()
-            try:
-                appstruct = self.client_form.validate(controls)
-            except deform.ValidationFailure as e:
-                # Form is NOT valid
-                return dict(title='Add Client Page', form=e.render())
+    #    if 'submit' in self.request.params:
+    #        controls = self.request.POST.items()
+    #        try:
+    #            appstruct = self.client_form.validate(controls)
+    #        except deform.ValidationFailure as e:
+    #            # Form is NOT valid
+    #            return dict(title='Add Client Page', form=e.render())
 
-            # Add a new page to the DB
-            new_title = appstruct['title']
-            new_body = appstruct['body']
-            DBSession.add(Page(new_title, new_body))
+    #        # Add a new page to the DB
+    #        new_title = appstruct['title']
+    #        new_body = appstruct['body']
+    #        DBSession.add(Page(new_title, new_body))
 
-            # Get the new ID and redirect
-            page = DBSession.query(Page).filter_by(title=new_title).one()
-            new_uid = page.uid
+    #        # Get the new ID and redirect
+    #        page = DBSession.query(Page).filter_by(title=new_title).one()
+    #        new_uid = page.uid
 
-            # Now visit new page
-            url = self.request.route_url('clientpage_view', uid=new_uid)
-            return HTTPFound(url)
+    #        # Now visit new page
+    #        url = self.request.route_url('clientpage_view', uid=new_uid)
+    #        return HTTPFound(url)
 
-        return dict(title='Add Client Page', form=self.client_form.render())
+    #    return dict(title='Add Client Page', form=self.client_form.render())
 
     @view_config(route_name='clientpage_view',
                 renderer='templates/clientpage_view.pt')
@@ -96,42 +95,42 @@ class ClientViews(object):
 
         return dict(page=page, title=page['title'])
 
-    @view_config(route_name='clientpage_edit',
-                permission='edit',
-                renderer='templates/clientpage_addedit.pt')
-    def clientpage_edit(self):
-        uid = int(self.request.matchdict['uid'])
-        page = DBSession.query(Page).filter_by(uid=uid).one()
-        title = 'Edit ' + page.title
+    #@view_config(route_name='clientpage_edit',
+    #            permission='edit',
+    #            renderer='templates/clientpage_addedit.pt')
+    #def clientpage_edit(self):
+    #    uid = int(self.request.matchdict['uid'])
+    #    page = DBSession.query(Page).filter_by(uid=uid).one()
+    #    title = 'Edit ' + page.title
 
-#        client_form = self.client_form
+#   #     client_form = self.client_form
 
-        if 'submit' in self.request.params:
-            controls = self.request.POST.items()
-            try:
-                appstruct = self.client_form.validate(controls)
-            except deform.ValidationFailure as e:
-                return dict(title=title, page=page, form=e.render())
+    #    if 'submit' in self.request.params:
+    #        controls = self.request.POST.items()
+    #        try:
+    #            appstruct = self.client_form.validate(controls)
+    #        except deform.ValidationFailure as e:
+    #            return dict(title=title, page=page, form=e.render())
 
-            # Change the content and redirect to the view
-            page.title = appstruct['title']
-            page.body = appstruct['body']
+    #        # Change the content and redirect to the view
+    #        page.title = appstruct['title']
+    #        page.body = appstruct['body']
 
-            url = self.request.route_url('clientpage_view', uid=uid)
-            return HTTPFound(url)
+    #        url = self.request.route_url('clientpage_view', uid=uid)
+    #        return HTTPFound(url)
 
-        form = self.client_form.render(dict(uid=page.uid, title=page.title, body=page.body))
+    #    form = self.client_form.render(dict(uid=page.uid, title=page.title, body=page.body))
 
-        return dict(page=page, title=title, form=form)
+    #    return dict(page=page, title=title, form=form)
 
-    @view_config(route_name='clientpage_delete', permission='edit')
-    def clientpage_delete(self):
-        uid = int(self.request.matchdict['uid'])
-        page = DBSession.query(Page).filter_by(uid=uid).one()
-        DBSession.delte(page)
+    #@view_config(route_name='clientpage_delete', permission='edit')
+    #def clientpage_delete(self):
+    #    uid = int(self.request.matchdict['uid'])
+    #    page = DBSession.query(Page).filter_by(uid=uid).one()
+    #    DBSession.delte(page)
 
-        url = self.request.route_url('client_view')
-        return HTTPFound(url)
+    #    url = self.request.route_url('client_view')
+    #    return HTTPFound(url)
 
     @view_config(route_name='login', renderer='templates/login.pt')
     @forbidden_view_config(renderer='templates/login.pt')
