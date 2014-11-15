@@ -115,7 +115,7 @@ class Post_Grad(Base):
     internship = Column(Integer)
     residency = Column(Integer)
     fellowship = Column(Integer)
-    taching_appt = Column(Integer) # wat
+    teaching_apt = Column(Integer)
     post_grad_specialty = Column(Text)
     post_grad_institution = Column(Text)
     post_grad_address = Column(Text)
