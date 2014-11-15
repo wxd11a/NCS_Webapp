@@ -128,6 +128,12 @@ class Post_Grad(Base):
     post_grad_institution_director = Column(Text)
     post_grad_institution_current_director = Column(Text)
 
+class Individ_PG(Base):
+    ind_id = Column(Integer)
+    pg_id = Column(Integer)
+    # FOREIGN KEY (Ind_ID) REFERENCES Individ_Info(application_id)
+    # FOREIGN KEY (PG_ID) REFERENCES Post_Grad(post_grad_id)
+
 #class Individ_Info(Base):
 #    __tablename__ = 'individ_info'
 ##    uid = Column(Integer, 
