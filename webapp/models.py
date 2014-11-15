@@ -48,7 +48,8 @@ Base = declarative_base()
 # Page should be a table that holds all the applications with the name associated with each application.
 #   It might be better to remove this table since it really is an alias for application_id and the user name
 #   The thought behind this is that Page can be queried to list the searched applications instead of having to query Individ_Info
-#       for basic information which only iis there to provide a link to the queried application.
+#       for basic information which only iis there to provide a link to the queried application. Doing it this way though would
+#       require redundant data, but hopefully would reduce query loads when listing a large amount of applications.
 class Page(Base):
     __tablename__ = 'applications'
     uid = Column(Integer, primary_key=True)

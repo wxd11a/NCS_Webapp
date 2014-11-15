@@ -58,6 +58,7 @@ class ClientViews(object):
         pages = DBSession.query(Page).order_by(Page.title)
         return dict(title='Welcome to the Client Page', pages=pages)
 
+    # Douglas, clientpage_add should add a new application
     @view_config(route_name='clientpage_add',
                 permission='edit',
                 renderer='templates/clientpage_addedit.pt')
@@ -95,7 +96,8 @@ class ClientViews(object):
         page = DBSession.query(Page).filter_by(uid=uid).one()
 
         return dict(page=page, title=page['title'])
-
+    
+    # Douglas, this should be an existing application page
     @view_config(route_name='clientpage_edit',
                 permission='edit',
                 renderer='templates/clientpage_addedit.pt')
