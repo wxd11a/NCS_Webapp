@@ -46,9 +46,9 @@ Base = declarative_base()
 #Index('my_index', MyModel.name, unique=True, mysql_length=255)
 
 class Page(Base):
-    __tablename__ = 'clientpages'
+    __tablename__ = 'applications'
     uid = Column(Integer, primary_key=True)
-    title = Column(Text, unique=True)
+    title = Column(Text)
     body = Column(Text)
 
     def __init__(self, title, body):
@@ -93,6 +93,17 @@ class Individ_Info(Base):
     military_last_location = Column(Text)
     military_branch = Column(Text)
     currently_active = Column(Integer)
+
+class Education_Background(Base):
+    edu_id = Column(Integer)
+    # FOREIGN KEY (edu_id) REFERENCES Individ_Info(application_id)
+    professional_degree_institution = Column(Text)
+    institution_address = Column(Text)
+    institution_city = Column(Text)
+    institution_state_or_country = Column(Text)
+    institution_postal_code = Column(Text)
+    degree = Column(Text)
+    attendence_dates(Text)
 
 
 #class Individ_Info(Base):
