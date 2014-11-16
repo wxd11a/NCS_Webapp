@@ -8,7 +8,7 @@
 <head>
 	<title>Client - ${title}</title>
 	<more metal:define-slot="head-more"></more>
-	<link rel="stylesheet" href="${request.static_url('webapp:static/client.css')}"/>
+	<link rel="stylesheet" href="${request.static_url('webapp:static/conformity.css')}"/>
 </head>
 <body>
 	<div id="main">

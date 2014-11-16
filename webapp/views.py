@@ -16,7 +16,8 @@ from sqlalchemy.exc import DBAPIError
 #    pages,
 #    )
 
-from .models import DBSession, Page, Individ_Info
+# Douglas, removed Page
+from .models import DBSession, Individ_Info
 from .security import USERS
 
 
@@ -55,8 +56,10 @@ class ClientViews(object):
     @view_config(route_name='client_view',
                 renderer='templates/client_view.pt')
     def client_view(self):
-        pages = DBSession.query(Page).order_by(Page.title)
-        return dict(title='Welcome to the Client Page', pages=pages)
+        #pages = DBSession.query(Page).order_by(Page.title)
+        clients = DBSession.query(Individ_Info).order_by(Individ_Info.last_name)
+        #return dict(title='Welcome to the Client Page', pages=pages)
+        return dict(title='Client List',clients=clients)
 
     # Douglas, clientpage_add should add a new application
     @view_config(route_name='clientpage_add',
@@ -88,14 +91,21 @@ class ClientViews(object):
             return HTTPFound(url)
 
         return dict(title='Add Client Page', form=self.client_form.render())
-
+    
+    # Douglas, this should be the standard view for applications. Ideally there would be a link to edit which would lead to an edit view
     @view_config(route_name='clientpage_view',
                 renderer='templates/clientpage_view.pt')
     def clientpage_view(self):
-        uid = self.request.matchdict['uid']
-        page = DBSession.query(Page).filter_by(uid=uid).one()
+        #uid = self.request.matchdict['uid']
+        #page = DBSession.query(Page).filter_by(uid=uid).one()
 
-        return dict(page=page, title=page['title'])
+        #return dict(page=page, title=page['title'])
+        
+        id = int(self.request.matchdict['id'])
+
+        client = DBSession.query(Individ_Info).filter_by(id=id).one()
+
+        return dict(client=client, title=client['last_name'])
     
     # Douglas, this should be an existing application page
     @view_config(route_name='clientpage_edit',

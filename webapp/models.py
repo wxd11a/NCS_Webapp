@@ -2,6 +2,7 @@ from pyramid.security import Allow, Everyone
 
 from sqlalchemy import (
     Column,
+    ForeignKey,
     Index,
     Integer,
     Text,
@@ -10,6 +11,7 @@ from sqlalchemy import (
     DateTime
     )
 
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
@@ -50,15 +52,15 @@ Base = declarative_base()
 #   The thought behind this is that Page can be queried to list the searched applications instead of having to query Individ_Info
 #       for basic information which only iis there to provide a link to the queried application. Doing it this way though would
 #       require redundant data, but hopefully would reduce query loads when listing a large amount of applications.
-class Page(Base):
-    __tablename__ = 'applications'
-    uid = Column(Integer, primary_key=True)
-    title = Column(Text)
-    body = Column(Text)
-
-    def __init__(self, title, body):
-        self.title = title
-        self.body = body
+#class Page(Base):
+#    __tablename__ = 'applications'
+#    uid = Column(Integer, primary_key=True)
+#    title = Column(Text)
+#    body = Column(Text)
+#
+#    def __init__(self, title, body):
+#        self.title = title
+#        self.body = body
 
 class Individ_Info(Base):
     __tablename__ = 'individ_info'
@@ -99,6 +101,9 @@ class Individ_Info(Base):
     military_last_location = Column(Text)
     military_branch = Column(Text)
     currently_active = Column(Integer)
+    # for association between tables
+    # Douglas, commented out while testing without 3NF
+    #children = relationship('individ_pg')
 
 class Education_Background(Base):
     __tablename__ = 'education_background'
@@ -136,140 +141,14 @@ class Post_Grad(Base):
     post_grad_institution_director = Column(Text)
     post_grad_institution_current_director = Column(Text)
 
-class Individ_PG(Base):
-    __tablename__ = 'individ_pg'
-
-    ind_id = Column(Integer, ForeignKey('individ_info.id'))
-    pg_id = Column(Integer, ForeignKey('post_grad.id'))
+#class Individ_PG(Base):
+#    __tablename__ = 'individ_pg'
+#
+#    ind_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+#    pg_id = Column(Integer, ForeignKey('post_grad.id'), primary_key=True)
     # FOREIGN KEY (Ind_ID) REFERENCES Individ_Info(application_id)
     # FOREIGN KEY (PG_ID) REFERENCES Post_Grad(post_grad_id)
 
-#class Individ_Info(Base):
-#    __tablename__ = 'individ_info'
-##    uid = Column(Integer, 
-#    application_id = Column(Integer, primary_key=True)
-#    type_professional = Column(Text) # Need to incorporate NOT NULL
-#    last_name = Column(Text) # Need to incorporate NOT NULL
-#    first_name = Column(Text) # Need to incorporate NOT NULL
-#    middle_name = Column(Text) # Need to incorporate NOT NULL
-#    suffix_name = Column(Text)
-#    maiden_name = Column(Text)
-#    years_associated_one = Column(Text) # What does this column mean?
-#    other_name = Column(Text) # What does this column mean?
-#    years_associated_two = Column(Text) # Need to default to NULL
-#    home_mailing_address = Column(Text) # Need to incorporate NOT NULL
-#    home_city = Column(Text) # Need to incorporate NOT NULL
-#    home_state_or_country = Column(Text) # Need to incorporate NOT NULL
-#    home_postal_code = Column(Text) # Need to incorporate NOT NULL
-#    home_phone = Column(Text) # Need to incorporate NOT NULL
-#    social_security = Column(Text) # Need to incorporate NOT NULL
-#    gender = Column(Integer) # Need to incorporate NOT NULL
-#    correspondence_address = Column(Text)
-#    correspondence_city = Column(Text)
-#    correspondence_state_or_country = Column(Text)
-#    correspondence_postal_code = Column(Text)
-#    correspondence_phone = Column(Text)
-#    correspondence_fax = Column(Text)
-#    correspondence_email = Column(Text)
-#    dob = Column(Text) # Need to incorporate NOT NULL
-#    place_of_birth = Column(Text) # Need to incorporate NOT NULL
-#    citizenship = Column(Text) # Need to incorporate NOT NULL
-#    visa_number_and_status = Column(Text)
-#    eligibility = Column(Integer) # Need to incorporate NOT NULL
-#    military_service = Column(Integer) # Need to incorporate NOT NULL
-#    dates_of_service = Column(Text)
-#    military_last_location = Column(Text)
-#    military_branch = Column(Text)
-#    currently_active = Column(Integer) # Need to incorporate NOT NULL
-#
-#class Education(Base):
-#    __tablename__ = 'education'
-#    # id field is for testing since it won't run without a primary key
-#    id = Column(Integer, primary_key=True)
-#    professional_degree_institution = Column(Text) # NOT NULL
-#    institution_address = Column(Text) # Not NULL
-#    institution_city = Column(Text) # NOT NULL
-#    institution_state_or_country = Column(Text) # Not null
-#    institution_postal_code = Column(Text) # NOT NULL
-#    degree = Column(Text) # NOT NULL
-#    attendence_dates = Column(Text) # NOT NULL
-#    extra_degree = Column(Integer)
-#    post_grad_edu = Column(Integer)
-#    post_grad_specialty = Column(Text)
-#    post_grad_institution = Column(Text)
-#    post_grad_institution_address = Column(Text)
-#    post_grad_institution_city = Column(Text)
-#    post_grad_institution_state_or_country = Column(Text)
-#    post_grad_institution_postal_code = Column(Text)
-#    post_grad_institution_degree = Column(Text)
-#    post_grad_institution_completion = Column(Integer)
-#    post_grad_institution_attendance = Column(Text)
-#    post_grad_institution_director = Column(Text)
-#    post_grad_institution_current_director = Column(Text)
-#    post_grad_edu_two = Column(Integer)
-#    post_grad_specialty_two = Column(Text)
-#    post_grad_institution_two = Column(Text)
-#    post_grad_institution_two_address = Column(Text)
-#    post_grad_institution_two_city = Column(Text)
-#    post_grad_institution_two_state_or_country = Column(Text)
-#    post_grad_institution_two_postal_code = Column(Text)
-#    post_grad_institution_two_degree = Column(Text)
-#    post_grad_institution_two_completion = Column(Integer)
-#    post_grad_institution_two_attendance = Column(Text)
-#    post_grad_institution_two_director = Column(Text)
-#    post_grad_institution_two_current_director = Column(Text)
-#    post_grad_extra_training = Column(Integer)
-#    professional_degree_institution_extra = Column(Text)
-#    professional_degree_institution_extra_address = Column(Text)
-#    professional_degree_institution_extra_city = Column(Text)
-#    professional_degree_institution_extra_state_or_country = Column(Text)
-#    professional_degree_institution_extra_postal_code = Column(Text)
-#    professional_degree_extra_degree = Column(Text)
-#    professional_degree_extra_attendance_dates = Column(Text)
-#
-#class License_Certificates(Base):
-#    __tablename__ = 'license_certificates'
-#    # id is for testing since it won't run without a primary key
-#    id = Column(Integer, primary_key=True)
-#    license_type_one = Column(Text)
-#    license_number_one = Column(Text)
-#    license_registration_one = Column(Text)
-#    license_date_of_issue_one = Column(Text)
-#    license_date_of_expiration_one = Column(Text)
-#    license_currently_practice_one = Column(Integer)
-#    license_type_two = Column(Text)
-#    license_number_two = Column(Text)
-#    license_registration_two = Column(Text)
-#    license_date_of_issue_two = Column(Text)
-#    license_date_of_expiration_two = Column(Text)
-#    license_currently_practice_two = Column(Integer)
-#    license_type_three = Column(Text)
-#    license_number_three = Column(Text)
-#    license_registraiton_three = Column(Text)
-#    license_date_of_issue_three = Column(Text)
-#    license_date_of_expiration_three = Column(Text)
-#    license_currently_practice_three = Column(Integer)
-#    dea_number = Column(Text)
-#    dea_date_of_issue = Column(Text)
-#    dea_date_of_expiration = Column(Text)
-#    dps_number = Column(Text)
-#    dps_date_of_issue = Column(Text)
-#    dps_date_of_expiration = Column(Text)
-#    other_cds = Column(Text)
-#    other_cds_number = Column(Text)
-#    other_cds_registration = Column(Text)
-#    other_cds_date_of_issue = Column(Text)
-#    other_cds_date_of_expiration = Column(Text)
-#    other_cds_currently_practice = Column(Integer)
-#    upin = Column(Text)
-#    national_provider = Column(Text)
-#    medicare_provider = Column(Integer)
-#    medicare_provider_number = Column(Text)
-#    medicaid_provider = Column(Integer)
-#    medicaid_provider_number = Column(Text)
-#    ecfmg = Column(Integer)
-#    ecfmg_number = Column(Text)
-#    ecfmg_date_of_issue = Column(Text)
 
 
 class Root(object):
