@@ -1,11 +1,9 @@
 <div metal:use-macro="view.layout">
 	<div metal:fill-slot="content">
-		<!-- <a href="${request.route_url('clientpage_edit', uid=page.uid)}">Edit</a>
-		<a href="${request.route_url('clientpage_delete', uid=page.uid)}">Delete</a> -->
 
 		<p>${structure: client.title}</p>
 
-		<div id="appnav">
+		<!--<div id="appnav">
 			<a id="individualInformation">Individual's Information</a>
 			<a id="education">Education</a>
 			<a id="profesionalInformation">Professional Information</a>
@@ -17,6 +15,6 @@
 			<a id="practiceLocation">Practice Location Information</a>
 			<a id="disclosureQuestions">Disclosure Questions</a>
 			<a id="standardAAR">Standard Authorization, Attestation, and Release</a>
-		</div>
+		</div> -->
 	</div>
 </div>

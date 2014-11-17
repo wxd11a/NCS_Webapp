@@ -11,11 +11,12 @@
 	<link rel="stylesheet" href="${request.static_url('webapp:static/conformity.css')}"/>
 </head>
 <body>
+	<div id="loginout">
+		<a tal:condition="view.logged_in is not None" href="${request.application_url}/logout">Logout</a>
+		<a tal:condition="view.logged_in is None" href="${request.application_url}/login">Log In</a>
+	</div>
+
 	<div id="main">
-		<div id="loginout">
-			<a tal:condition="view.logged_in is not None" href="${request.application_url}/logout">Logout</a>
-			<a tal:condition="view.logged_in is None" href="${request.application_url}/login">Log In</a>
-		</div>
 		<h1>
 			<a href="${request.route_url('client_view')}">
 				<img src="${request.static_url('webapp:static/logo.png')}" alt="Logo"/></a>

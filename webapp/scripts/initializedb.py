@@ -11,13 +11,12 @@ from pyramid.paster import (
 
 from pyramid.scripts.common import parse_vars
 
+# Douglas, removed Page
 from ..models import (
     DBSession,
-    Page,
     Individ_Info,
     Education_Background,
     Post_Grad,
-    Individ_PG,
     Base
     )
 
@@ -44,5 +43,6 @@ def main(argv=sys.argv):
         # ori was model = MyModel(name='one', value=1)
         #model = MyModel(name='one', value=1)
         # Douglas, change model = ... to suit the new DB. Possibly with a users table for authentication.
-        model = Page(title='Root', body='<p>Root</p>')
+        #model = Page(title='Root', body='<p>Root</p>')
+        model = Individ_Info(id=int(1), last_name='Cassingham', first_name='Scott', type_professional='anethesiologist')
         DBSession.add(model)

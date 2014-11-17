@@ -3,10 +3,12 @@
 		<div id=main>
 			<ul>
 				<li tal:repeat="client clients">
-					<a href="${request.route_url('clientpage_view', uid=clients.id))}">${client.title}</a>
+					<a href="${request.route_url('clientpage_view', uid=client.id)}">
+						${client.last_name}
+					</a>
 				</li>
-			</ul
-			<div id="appnav">
+			</ul>
+			<!--<div id="appnav">
 				<ul>
 					<li><a id="individualInformation">Individual's Information</a></li>
 					<li><a id="education">Education</a></li>
@@ -20,7 +22,7 @@
 					<li><a id="disclosureQuestions">Disclosure Questions</a></li>
 					<li><a id="standardAAR">Standard Authorization, Attestation, and Release</a></li>
 				</ul>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>
