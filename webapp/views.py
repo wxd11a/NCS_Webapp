@@ -101,11 +101,12 @@ class ClientViews(object):
 
         #return dict(page=page, title=page['title'])
         
-        id = int(self.request.matchdict['id'])
+        id = int(self.request.matchdict['uid'])
 
         client = DBSession.query(Individ_Info).filter_by(id=id).one()
-
-        return dict(client=client, title=client['last_name'])
+        # Douglas, "Individ_Info" object is not subscriptable is returned
+        #   For some reason it can't return client (the table) as a dictionary I believe
+        return dict(client=client, last_name=client['last_name'])
     
     # Douglas, this should be an existing application page
     @view_config(route_name='clientpage_edit',
