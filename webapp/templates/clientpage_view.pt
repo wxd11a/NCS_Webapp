@@ -1,7 +1,10 @@
 <div metal:use-macro="view.layout">
 	<div metal:fill-slot="content">
-		TEST
-		<p>${structure: last_name}</p>
+		<div id="main">
+			<div id="appnav">
+				<p>${structure: client.last_name}</p>
+			</div>
+		</div>
 
 		<!--<div id="appnav">
 			<a id="individualInformation">Individual's Information</a>

@@ -45,6 +45,7 @@ class ClientViews(object):
 
     @reify
     def client_form(self):
+        # Douglas, may need to use ... ClientPage().clone() to create a deep copy so the original schema stays intact
         schema = ClientPage()
         return deform.Form(schema, buttons=('submit',))
 
@@ -66,6 +67,8 @@ class ClientViews(object):
                 permission='edit',
                 renderer='templates/clientpage_addedit.pt')
     def clientpage_add(self):
+        # Douglas, may need to pass a var into this so we know the type of form which needs to be created
+
         # Douglas, previous form call
         #form = self.client_form.render()
 
@@ -100,13 +103,15 @@ class ClientViews(object):
         #page = DBSession.query(Page).filter_by(uid=uid).one()
 
         #return dict(page=page, title=page['title'])
-        
+
+        # Retrieving the uid (aka Individ_Info.id) as selected by the link from the previous page
         id = int(self.request.matchdict['uid'])
 
         client = DBSession.query(Individ_Info).filter_by(id=id).one()
-        # Douglas, "Individ_Info" object is not subscriptable is returned
-        #   For some reason it can't return client (the table) as a dictionary I believe
-        return dict(client=client, last_name=client['last_name'])
+        # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
+        full_name = "{}, {}".format(client.last_name, client.first_name)
+
+        return dict(client=client, title=full_name)
     
     # Douglas, this should be an existing application page
     @view_config(route_name='clientpage_edit',
