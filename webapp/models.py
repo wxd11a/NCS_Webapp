@@ -150,31 +150,35 @@ class Post_Grad(Base):
     # FOREIGN KEY (PG_ID) REFERENCES Post_Grad(post_grad_id)
 
 class License_Certificates:
-       id = Column(Integer, primary_key=True)
-       dea_number = Column(Text)
-       dea_date_of_issue = Column(Text)
-       dea_date_of_expiration = Column(Text)
-       dps_number = Column(Text)
-       dps_date_of_issue = Column(Text)
-       dps_date_of_expiration = Column(Text)
-       other_cds = Column(Text)
-       other_cds_number = Column(Text)
-       other_cds_registration = Column(Text)
-       other_cds_date_of_issue = Column(Text)
-       other_cds_date_of_expiration = Column(Text)
-       other_cds_currently_practice = Column(Integer)
-       upin = Column(Text)
-       national_provider = Column(Text)
-       medicare_provider = Column(Integer)
-       medicare_provider_number = Column(Text)
-       medicaid_provider = Column(Integer)
-       medicaid_provider_number = Column(Text)
-       ecfmg = Column(Integer)
-       ecfmg_number = Column(Text)
-       ecfmg_date_of_issue = Column(Text)
+    __tablename__ = 'license_certificates'
+
+    id = Column(Integer, primary_key=True)
+    dea_number = Column(Text)
+    dea_date_of_issue = Column(Text)
+    dea_date_of_expiration = Column(Text)
+    dps_number = Column(Text)
+    dps_date_of_issue = Column(Text)
+    dps_date_of_expiration = Column(Text)
+    other_cds = Column(Text)
+    other_cds_number = Column(Text)
+    other_cds_registration = Column(Text)
+    other_cds_date_of_issue = Column(Text)
+    other_cds_date_of_expiration = Column(Text)
+    other_cds_currently_practice = Column(Integer)
+    upin = Column(Text)
+    national_provider = Column(Text)
+    medicare_provider = Column(Integer)
+    medicare_provider_number = Column(Text)
+    medicaid_provider = Column(Integer)
+    medicaid_provider_number = Column(Text)
+    ecfmg = Column(Integer)
+    ecfmg_number = Column(Text)
+    ecfmg_date_of_issue = Column(Text)
 
 class License_Types:
-    id = Column(Integer)
+    __tablename__ = 'license_types'
+
+    id = Column(Integer, ForeignKey('license_certificates.id'), primary_key=True)
     license_type = Column(Text)
     license_number = Column(Text)
     license_registration = Column(Text)
@@ -184,14 +188,17 @@ class License_Types:
     # FOREIGN KEY (lic_cert_id) REFERENCES License_Certificates(license_id)
 
 class Individ_License:
+    __tablename__ = 'individ_license'
+
     l_id = Column(Integer)
     i_id = Column(Integer)
     # FOREIGN KEY (L_ID) REFERENCES License_Certificates(license_id)
     # FOREIGN KEY (I_ID) REFERENCES Individ_Info(application_id)
 
 class Professional_Specialty_Info:
-    id = Column(Integer)
-    # FOREIGN KEY (specialty_id) REFERENCES Individ_Info(application_id)
+    __tablename__ = 'professional_specialty_info'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     primary_specialty = Column(Integer)
     specialty = Column(Text)
     board_certified = Column(Integer)
@@ -212,8 +219,9 @@ class Professional_Specialty_Info:
     other_areas_professional_practice = Column(Text)
 
 class Work_History:
-    id = Column(Integer)
-    # FOREIGN KEY (work_history_id) REFERENCES Individ_Info(application_id)
+    __tablename__ = 'work_history'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     current_practice = Column(Integer)
     practice_name = Column(Text)
     start_date = Column(Text)
@@ -225,6 +233,8 @@ class Work_History:
     practice_reason_for_discontinuance = Column(Text)
 
 class Hospital:
+    __tablename__ = 'hospital'
+
     id = Column(Integer, primary_key=True)
     hospital_primary = Column(Integer)
     hospital_privileges = Column(Integer)
@@ -246,10 +256,15 @@ class Hospital:
     hospital_reason_for_leaving = Column(Text)
 
 class Individ_Hosp:
+    # this is an associative table
+    __tablename__ = 'individ_hosp'
+
     H_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     I_id = Column(Integer, ForeignKey('hospital.id'), primary_key=True)
 
 class Professional_Liability_Insurance_Coverage:
+    __tablename__ = 'professional_liability_insurance_coverage'
+
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     self_insured = Column(Integer)
     malpractice_insurance_name = Column(Text)
@@ -267,12 +282,16 @@ class Professional_Liability_Insurance_Coverage:
     malpractice_insurance_time_with_carrier = Column(Text)
 
 class Call_Coverage:
+    __tablename__ = 'call_coverage'
+
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     colleague_name = Column(Text)
     colleague_specialty = Column(Text)
     practice_partners_name = Column(Text)
 
 class Practice_Location_Info:
+    __tablename__ = 'practice_location_info'
+
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     practice_location_name = Column(Text)
     service_type = Column(Integer)
@@ -426,6 +445,63 @@ class Practice_Location_Info:
     anasthesia_administered = Column(Integer)
     anasthesia_administered_categories = Column(Text)
     anasthesia_administrator = Column(Text)
+
+class Individ_Practice_Loc:
+    __tablename__ = 'individ_practice_loc'
+
+    I_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    Lo_id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
+
+class Certs:
+    __tablename__ = 'certs'
+
+    id = Column(Integer, ForeignKey('location.id'), primary_key=True)
+    name = Column(Text)
+    type = Column(Text)
+
+class Add_Office_Procedures:
+    __tablename__ = 'add_office_procedures'
+
+    id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
+    description = Column(Text)
+
+class Disclosure_Questions:
+    __tablename__ = 'disclosure_questions'
+    
+    # Douglas, should id also be a primary key since it is a fk to individ_id?
+    id = Column(Integer, ForeignKey('individ_info.id')
+    question_number = Column(Integer, primary_key=True)
+    question_answer = Column(Integer)
+
+class Disclosure_Questions_Explainations:
+    __tablename__ = 'disclosure_questions_explainations'
+    # Douglas, should I just name explaination_number to id to be consistent? Probably.
+    explaination_number = Column(Integer, ForeignKey('disclosure_questions.question_number')
+    question_explaination = Column(Text)
+
+class Malpractice_Claims:
+    __tablename__ = 'malpractice_claims'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    incident_date = Column(Text)
+    date_filed = Column(Text)
+    claim_status = Column(Text)
+    carrier_involved = Column(Text)
+    carrier_address = Column(Text)
+    carrier_city = Column(Text)
+    carrier_state_or_country = Column(Text)
+    carrier_postal_code = Column(Text)
+    carrier_phone = Column(Text)
+    carrier_polity_number = Column(Text)
+    settlement = Column(Text)
+    paid = Column(Text)
+    resolution = Column(Integer)
+    description = Column(Text)
+    defendant = Column(Text)
+    co_defendant = Column(Integer)
+    involvement = Column(Text)
+    injury_to_patient = Column(Text)
+    npdb = Column(Integer)
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
