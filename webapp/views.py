@@ -8,6 +8,7 @@ from pyramid.security import remember, forget, authenticated_userid
 #from pyramid.response import Response
 from pyramid.view import view_config, forbidden_view_config
 
+from sqlalchemy import inspect
 from sqlalchemy.exc import DBAPIError
 
 #from .models import (
@@ -106,12 +107,25 @@ class ClientViews(object):
 
         # Retrieving the uid (aka Individ_Info.id) as selected by the link from the previous page
         id = int(self.request.matchdict['uid'])
+        # Get the selected navigation view (ex. Individual Information, Education, etc.)
+        loc = self.request.matchdict['loc']
 
-        client = DBSession.query(Individ_Info).filter_by(id=id).one()
+        # Match the query with the location
+        if loc == 'individual':
+            client = DBSession.query(Individ_Info).filter_by(id=id).one()
+
         # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
         full_name = "{}, {}".format(client.last_name, client.first_name)
 
-        return dict(client=client, title=full_name)
+        # Douglas, creating a dictionary so the query object can be iterated through
+        client_dict = {}
+        for k in client.__mapper__.columns.keys():
+            client_dict[k] = getattr(client, k)
+        #client_dict = get_dict(client)
+        #mapper = inspect(client_info)
+        #for column in mapper:
+
+        return dict(client=client_dict, title=full_name, loc=loc)
     
     # Douglas, this should be an existing application page
     @view_config(route_name='clientpage_edit',
