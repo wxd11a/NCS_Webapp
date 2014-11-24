@@ -11,6 +11,8 @@ from pyramid.view import view_config, forbidden_view_config
 from sqlalchemy import inspect
 from sqlalchemy.exc import DBAPIError
 
+from collections import OrderedDict
+
 #from .models import (
 #    DBSession,
 #    MyModel,
@@ -117,8 +119,9 @@ class ClientViews(object):
         # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
         full_name = "{}, {}".format(client.last_name, client.first_name)
 
-        # Douglas, creating a dictionary so the query object can be iterated through
-        client_dict = {}
+        # Douglas, creating an ordered dictionary so the query object can be iterated through.
+        #   Making it an OrderedDict allows the DB order to remain intact.
+        client_dict = OrderedDict()
         for k in client.__mapper__.columns.keys():
             client_dict[k] = getattr(client, k)
         #client_dict = get_dict(client)
