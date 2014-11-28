@@ -3,10 +3,7 @@
 		<div id="main">
 			<div id="appnav">
 				<ul>
-					<li tal:repeat="ckey client">${client[ckey]}</li>
-					${client}
-					${type(client)}
-					LOC ${loc}
+					<li tal:repeat="ckey client.__mapper__.columns.keys()">${getattr(client, ckey)}</li>
 				</ul>
 
 			</div>

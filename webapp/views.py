@@ -11,8 +11,6 @@ from pyramid.view import view_config, forbidden_view_config
 from sqlalchemy import inspect
 from sqlalchemy.exc import DBAPIError
 
-from collections import OrderedDict
-
 #from .models import (
 #    DBSession,
 #    MyModel,
@@ -102,33 +100,51 @@ class ClientViews(object):
     @view_config(route_name='clientpage_view',
                 renderer='templates/clientpage_view.pt')
     def clientpage_view(self):
-        #uid = self.request.matchdict['uid']
-        #page = DBSession.query(Page).filter_by(uid=uid).one()
-
-        #return dict(page=page, title=page['title'])
 
         # Retrieving the uid (aka Individ_Info.id) as selected by the link from the previous page
         id = int(self.request.matchdict['uid'])
         # Get the selected navigation view (ex. Individual Information, Education, etc.)
         loc = self.request.matchdict['loc']
 
-        # Match the query with the location
+	# Individual's Information
+	# Education
+	# Professional Information
+	# Work History
+	# Hospital Affiliations
+	# References
+	# Insurance Coverage
+	# Call Coverage
+	# Practice Location Information
+	# Disclosure Questions
+	# Standard Authorization, Attestation, and Release
+
+        # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
         if loc == 'individual':
             client = DBSession.query(Individ_Info).filter_by(id=id).one()
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+            #
+        elif loc == 'education':
+
+        elif loc == 'education':
 
         # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
         full_name = "{}, {}".format(client.last_name, client.first_name)
 
-        # Douglas, creating an ordered dictionary so the query object can be iterated through.
-        #   Making it an OrderedDict allows the DB order to remain intact.
-        client_dict = OrderedDict()
-        for k in client.__mapper__.columns.keys():
-            client_dict[k] = getattr(client, k)
-        #client_dict = get_dict(client)
-        #mapper = inspect(client_info)
-        #for column in mapper:
-
-        return dict(client=client_dict, title=full_name, loc=loc)
+        return dict(client=client, title=full_name, loc=loc)
     
     # Douglas, this should be an existing application page
     @view_config(route_name='clientpage_edit',
