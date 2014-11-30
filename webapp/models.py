@@ -23,6 +23,8 @@ from sqlalchemy.orm import (
     sessionmaker,
     )
 
+from wtforms_alchemy import ModelForm
+
 from zope.sqlalchemy import ZopeTransactionExtension
 
 # (From Pyramid-blogr) The first line initializes sqlalchemy's threaded session maker - we will use it to interact with [the] database and persist our changes to the databse.
@@ -71,22 +73,22 @@ class Individ_Info(Base):
     
     # Changed application_id to id because it is too verbose and can be identified by its class when called
     id = Column(Integer, primary_key=True)
-    reference = Column(Integer)
-    type_professional = Column(Text)
-    last_name = Column(Text)
-    first_name = Column(Text)
-    middle_name = Column(Text)
-    suffix_name = Column(Text)
-    maiden_name = Column(Text)
-    years_associated_one = Column(Text)
-    other_name = Column(Text)
-    years_associated_two = Column(Text)
-    home_mailing_address = Column(Text)
-    home_city = Column(Text)
-    home_state_or_country = Column(Text)
-    home_postal_code = Column(Text)
-    home_phone = Column(Text)
-    social_security = Column(Text)
+    last_name = Column(Text, key='Last name')
+    first_name = Column('First name',Text, key='First name')
+    reference = Column(Integer, key='Reference')
+    type_professional = Column(Text, key='Type')
+    middle_name = Column(Text, key='Middle name')
+    suffix_name = Column(Text, key='Suffix')
+    maiden_name = Column(Text, key='Maiden name')
+    years_associated_one = Column(Text, key='Years Associated One')
+    other_name = Column(Text, key='Other name')
+    years_associated_two = Column(Text, key='Years associated Two')
+    home_mailing_address = Column(Text, key='Home Mailing Address')
+    home_city = Column(Text, key='Home city')
+    home_state_or_country = Column(Text, key='Home state or country')
+    home_postal_code = Column(Text, key='Home Postal code')
+    home_phone = Column(Text, key='Home phone')
+    social_security = Column(Text, key='Social Security Number')
     gender = Column(Text)
     correspondence_address = Column(Text)
     correspondence_city = Column(Text)
@@ -108,6 +110,17 @@ class Individ_Info(Base):
     # for association between tables
     # Douglas, commented out while testing without 3NF
     #children = relationship('individ_pg')
+
+    #@classmethod
+    #def _get_keys(cls):
+    #    return sa.orm.class_mapper(cls).c.keys()
+
+    #def get_dict(self):
+    #    d = {}
+    #    for k in self._get_keys():
+    #        d[k] = getattr(self, k)
+    #    return d
+
 
 class Education_Background(Base):
     __tablename__ = 'education_background'
