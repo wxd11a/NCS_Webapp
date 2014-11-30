@@ -14,6 +14,8 @@ from .security import groupfinder
 #    )
 #
 
+# Douglas, Use Beaker and not the default session API
+# Douglas, Use Bcrypt for passwords
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -22,8 +24,8 @@ def main(global_config, **settings):
     Base.metadata.bind = engine
     config = Configurator(settings=settings,
                             root_factory='webapp.models.Root')
-    config.include('pyramid_chameleon')
-    
+    config.include('pyramid_jinja2')
+   
     # Security policies
     authn_policy = AuthTktAuthenticationPolicy(
             'sosecret', callback=groupfinder, hashalg='sha512')
@@ -35,7 +37,8 @@ def main(global_config, **settings):
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
     config.add_route('clientpage_add', '/add')
-    config.add_route('clientpage_view', '/{uid}')
+    # Douglas, for some reason adding /{loc} all the static routes seem to break
+    config.add_route('clientpage_view', '/{uid}/{loc}')
     config.add_route('clientpage_edit', '/{uid}/edit')
     config.add_route('clientpage_delete', '/{uid}/delete')
     config.add_static_view(name='static', path='webapp:static', cache_max_age=3600)

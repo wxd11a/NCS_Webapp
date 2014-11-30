@@ -1,0 +1,28 @@
+{% extends 'layout.jinja2' %}
+{% block content %}
+
+		<div id="main">
+			<div id="appnav">
+				<ul>
+					{% for ckey in client.__mapper__.columns.keys() %}
+					<li class='cattr'>{{ client[ckey] }}</li>
+					{% endfor %}
+				</ul>
+
+			</div>
+		</div>
+
+		<!--<div id="appnav">
+			<a id="individualInformation">Individual's Information</a>
+			<a id="education">Education</a>
+			<a id="profesionalInformation">Professional Information</a>
+			<a id="workHistory">Work History</a>
+			<a id="hospitalAffiliations">Hospital Affiliations</a>
+			<a id="references">References</a>
+			<a id="insuranceCoverage">Insurance Coverage</a>
+			<a id="callCoverage">Call Coverage</a>
+			<a id="practiceLocation">Practice Location Information</a>
+			<a id="disclosureQuestions">Disclosure Questions</a>
+			<a id="standardAAR">Standard Authorization, Attestation, and Release</a>
+		</div> -->
+{% endblock %}
