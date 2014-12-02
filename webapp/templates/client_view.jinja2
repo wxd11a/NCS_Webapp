@@ -2,6 +2,7 @@
 {% block content %}
 		<div id=main>
 			<ul>
+				{# iterate through all of the clients with links to their pages #}
 				{% for client in clients %}
 				<li class='clients-list'><a href="{{request.route_url('clientpage_view', uid=client.id, loc='individual')}}">
 					{{client.last_name}}</a></li>

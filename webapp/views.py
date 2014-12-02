@@ -19,6 +19,7 @@ from sqlalchemy.exc import DBAPIError
 
 # Douglas, removed Page
 from .models import DBSession, Individ_Info
+from .forms import Individ_Info_Form
 from .security import USERS
 
 
@@ -30,33 +31,34 @@ from .security import USERS
 #        return Response(conn_err_msg, content_type='text/plain', status_int=500)
 #    return {'one': one, 'project': 'webapp'}
 
-class ClientPage(colander.MappingSchema):
-    title = colander.SchemaNode(colander.String())
-    body = colander.SchemaNode(
-            colander.String(),
-            widget=deform.widget.RichTextWidget()
-    )
+#class ClientPage(colander.MappingSchema):
+#    title = colander.SchemaNode(colander.String())
+#    body = colander.SchemaNode(
+#            colander.String(),
+#            widget=deform.widget.RichTextWidget()
+#    )
 
 class ClientViews(object):
     def __init__(self, request):
         self.request = request
-        renderer = get_renderer("templates/layout.pt")
-        self.layout = renderer.implementation().macros['layout']
+        renderer = get_renderer("templates/layout.jinja2")
+        #self.layout = renderer.implementation().macros['layout']
         self.logged_in = authenticated_userid(request)
+    
+    # Douglas, old Colander/Deform form generation
+    #@reify
+    #def client_form(self):
+    #    # Douglas, may need to use ... ClientPage().clone() to create a deep copy so the original schema stays intact
+    #    schema = ClientPage()
+    #    return deform.Form(schema, buttons=('submit',))
 
-    @reify
-    def client_form(self):
-        # Douglas, may need to use ... ClientPage().clone() to create a deep copy so the original schema stays intact
-        schema = ClientPage()
-        return deform.Form(schema, buttons=('submit',))
-
-    @reify
-    def reqts(self):
-        return self.client_form.get_widget_resources()
+    #@reify
+    #def reqts(self):
+    #    return self.client_form.get_widget_resources()
     
     # Douglas, this should be the queried list of applications
     @view_config(route_name='client_view',
-                renderer='templates/client_view.pt')
+                renderer='templates/client_view.jinja2')
     def client_view(self):
         #pages = DBSession.query(Page).order_by(Page.title)
         clients = DBSession.query(Individ_Info).order_by(Individ_Info.last_name)
@@ -66,39 +68,50 @@ class ClientViews(object):
     # Douglas, clientpage_add should add a new application
     @view_config(route_name='clientpage_add',
                 permission='edit',
-                renderer='templates/clientpage_addedit.pt')
+                renderer='templates/clientpage_addedit.jinja2')
     def clientpage_add(self):
         # Douglas, may need to pass a var into this so we know the type of form which needs to be created
+        
+        form = RegistrationForm(self.request.POST)
+        if self.request.method == 'POST' and form.validate():
+            #user = User()
+            #user.username = form.username.data
+            #user.email = form.email.data
+            #user.save()
+            #redirect('register')
+        #return render_response('register.html', form=form)
+
 
         # Douglas, previous form call
         #form = self.client_form.render()
+        
+        # Douglas, old Colander/Deform forms
+        #if 'submit' in self.request.params:
+        #    controls = self.request.POST.items()
+        #    try:
+        #        appstruct = self.client_form.validate(controls)
+        #    except deform.ValidationFailure as e:
+        #        # Form is NOT valid
+        #        return dict(title='Add Client Page', form=e.render())
 
-        if 'submit' in self.request.params:
-            controls = self.request.POST.items()
-            try:
-                appstruct = self.client_form.validate(controls)
-            except deform.ValidationFailure as e:
-                # Form is NOT valid
-                return dict(title='Add Client Page', form=e.render())
+        #    # Add a new page to the DB
+        #    new_title = appstruct['title']
+        #    new_body = appstruct['body']
+        #    DBSession.add(Page(new_title, new_body))
 
-            # Add a new page to the DB
-            new_title = appstruct['title']
-            new_body = appstruct['body']
-            DBSession.add(Page(new_title, new_body))
+        #    # Get the new ID and redirect
+        #    page = DBSession.query(Page).filter_by(title=new_title).one()
+        #    new_uid = page.uid
 
-            # Get the new ID and redirect
-            page = DBSession.query(Page).filter_by(title=new_title).one()
-            new_uid = page.uid
+        #    # Now visit new page
+        #    url = self.request.route_url('clientpage_view', uid=new_uid)
+        #    return HTTPFound(url)
 
-            # Now visit new page
-            url = self.request.route_url('clientpage_view', uid=new_uid)
-            return HTTPFound(url)
-
-        return dict(title='Add Client Page', form=self.client_form.render())
+        #return dict(title='Add Client Page', form=self.client_form.render())
     
     # Douglas, this should be the standard view for applications. Ideally there would be a link to edit which would lead to an edit view
     @view_config(route_name='clientpage_view',
-                renderer='templates/clientpage_view.pt')
+                renderer='templates/clientpage_view.jinja2')
     def clientpage_view(self):
 
         # Retrieving the uid (aka Individ_Info.id) as selected by the link from the previous page
@@ -121,59 +134,86 @@ class ClientViews(object):
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
         if loc == 'individual':
             client = DBSession.query(Individ_Info).filter_by(id=id).one()
-        elif loc == 'education':
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
+        #    #
+        #elif loc == 'education':
             #
-        elif loc == 'education':
-            #
-        elif loc == 'education':
-            #
-        elif loc == 'education':
-            #
-        elif loc == 'education':
-            #
-        elif loc == 'education':
-            #
-        elif loc == 'education':
-            #
-        elif loc == 'education':
-            #
-        elif loc == 'education':
-
-        elif loc == 'education':
-
         # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
         full_name = "{}, {}".format(client.last_name, client.first_name)
+
+        # Getting the alternative name for use in printing
+        mapper = inspect(client)
+        docs = []
+        for column in mapper.attrs:
+            docs.append(column.key)
 
         return dict(client=client, title=full_name, loc=loc)
     
     # Douglas, this should be an existing application page
     @view_config(route_name='clientpage_edit',
                 permission='edit',
-                renderer='templates/clientpage_addedit.pt')
+                renderer='templates/clientpage_addedit.jinja2')
     def clientpage_edit(self):
-        uid = int(self.request.matchdict['uid'])
-        page = DBSession.query(Page).filter_by(uid=uid).one()
-        title = 'Edit ' + page.title
+        #uid = int(self.request.matchdict['uid'])
+        # page = DBSession.query(Page).filter_by(uid=uid).one()
+        #title = 'Edit ' + page.title
+        
+        # Get the id of the username, the section to edit, and query for data pertaining to the user
+        id = int(self.request.matchdict['uid']
+        loc = self.request.matchdict['loc']
+        if loc == 'individual':
+            # Douglas, This is where WTForm-Alchemy should come into play. Testing with known query first.
+            user = DBSession.query(Individ_Info).filter_by(uid=uid).one()
+            form = Individ_Info_UpdateForm(request.POST)
 
-#        client_form = self.client_form
+        # WTForms
+        #form = ProfileForm(request,POST,id)  
+        
+        if request.method == 'POST' and form.validate():
+            form.populate_obj(user)
+            # Add the changes to the DBSession
+            DBSession.add(user)
+            DBSession.commit()
+            
+            redirect('clientpage_edit')
+        
+        return render_response('clientpage_addedit.jinja2', form=form)
+            
+        
+        # Douglas, old Colander/Deform forms
+        #if 'submit' in self.request.params:
+        #    controls = self.request.POST.items()
+        #    try:
+        #        appstruct = self.client_form.validate(controls)
+        #    except deform.ValidationFailure as e:
+        #        return dict(title=title, page=page, form=e.render())
 
-        if 'submit' in self.request.params:
-            controls = self.request.POST.items()
-            try:
-                appstruct = self.client_form.validate(controls)
-            except deform.ValidationFailure as e:
-                return dict(title=title, page=page, form=e.render())
+        #    # Change the content and redirect to the view
+        #    page.title = appstruct['title']
+        #    page.body = appstruct['body']
 
-            # Change the content and redirect to the view
-            page.title = appstruct['title']
-            page.body = appstruct['body']
+        #    url = self.request.route_url('clientpage_view', uid=uid)
+        #    return HTTPFound(url)
 
-            url = self.request.route_url('clientpage_view', uid=uid)
-            return HTTPFound(url)
+        #form = self.client_form.render(dict(uid=page.uid, title=page.title, body=page.body))
 
-        form = self.client_form.render(dict(uid=page.uid, title=page.title, body=page.body))
-
-        return dict(page=page, title=title, form=form)
+        #return dict(page=page, title=title, form=form)
 
     @view_config(route_name='clientpage_delete', permission='edit')
     def clientpage_delete(self):
@@ -184,8 +224,8 @@ class ClientViews(object):
         url = self.request.route_url('client_view')
         return HTTPFound(url)
 
-    @view_config(route_name='login', renderer='templates/login.pt')
-    @forbidden_view_config(renderer='templates/login.pt')
+    @view_config(route_name='login', renderer='templates/login.jinja2')
+    @forbidden_view_config(renderer='templates/login.jinja2')
     def login(self):
         request = self.request
         login_url = request.route_url('login')

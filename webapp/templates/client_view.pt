@@ -3,7 +3,7 @@
 		<div id=main>
 			<ul>
 				<li tal:repeat="client clients">
-					<a href="${request.route_url('clientpage_view', uid=client.id)}">
+					<a href="${request.route_url('clientpage_view', uid=client.id, loc='individual')}">
 						${client.last_name}
 					</a>
 				</li>
