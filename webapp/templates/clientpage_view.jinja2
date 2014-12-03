@@ -5,7 +5,7 @@
 			<div id="appnav">
 				<ul>
 					{% for ckey in client.__mapper__.columns.keys() %}
-					<li class='cattr'>{{ client[ckey] }}</li>
+					<li class='cattr'>{{ckey}}: {{ client[ckey] }}</li>
 					{% endfor %}
 				</ul>
 

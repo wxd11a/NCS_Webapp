@@ -19,7 +19,7 @@ from sqlalchemy.exc import DBAPIError
 
 # Douglas, removed Page
 from .models import DBSession, Individ_Info
-from .forms import Individ_Info_Form
+from .forms import Individ_Info_Form, Individ_Info_UpdateForm
 from .security import USERS
 
 
@@ -79,7 +79,7 @@ class ClientViews(object):
             #user.email = form.email.data
             #user.save()
             #redirect('register')
-        #return render_response('register.html', form=form)
+        return render_response('clientpage_addedit', form=form)
 
 
         # Douglas, previous form call
@@ -191,7 +191,13 @@ class ClientViews(object):
             DBSession.add(user)
             DBSession.commit()
             
-            redirect('clientpage_edit')
+            # Example using Flask
+            #redirect('clientpage_edit')
+            
+            # Douglas, not sure about this url response with a render_reponse
+            url = self.request.route_url('clientpage_view', id=id)
+            return HTTPFound(url)
+
         
         return render_response('clientpage_addedit.jinja2', form=form)
             

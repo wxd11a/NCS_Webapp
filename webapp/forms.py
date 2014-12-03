@@ -7,11 +7,19 @@ from .models import Individ_Info, Education_Background
 class Individ_Info_Form(ModelForm):
     class Meta:
         model = Individ_Info
+    
+    @classmethod
+    def get_session(self):
+        return self.DBSession
 
 # An update class for Individ_Info so not all the vields need to be validated
 class Individ_Info_UpdateForm(Individ_Info_Form):
     class Meta:
         all_fields_optional = True
+    
+    @classmethod
+    def get_session(self):
+        return self.DBSession
 
 class Education_Background_Form(ModelForm):
     class Meta:

@@ -20,6 +20,12 @@ from ..models import (
     Base
     )
 
+from ..forms import (
+    Individ_Info_Form,
+    Individ_Info_UpdateForm,
+    Education_Background_Form
+    )
+
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
