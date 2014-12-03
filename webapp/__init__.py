@@ -39,7 +39,7 @@ def main(global_config, **settings):
     config.add_route('clientpage_add', '/add')
     # Douglas, for some reason adding /{loc} all the static routes seem to break
     config.add_route('clientpage_view', '/{uid}/{loc}')
-    config.add_route('clientpage_edit', '/{uid}/edit')
+    config.add_route('clientpage_edit', '/{uid}/{loc}/edit')
     config.add_route('clientpage_delete', '/{uid}/delete')
     config.add_static_view(name='static', path='webapp:static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static/')

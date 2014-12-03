@@ -41,7 +41,7 @@ from .security import USERS
 class ClientViews(object):
     def __init__(self, request):
         self.request = request
-        renderer = get_renderer("templates/layout.jinja2")
+        self.renderer = get_renderer("templates/layout.jinja2")
         #self.layout = renderer.implementation().macros['layout']
         self.logged_in = authenticated_userid(request)
     
@@ -74,12 +74,13 @@ class ClientViews(object):
         
         form = RegistrationForm(self.request.POST)
         if self.request.method == 'POST' and form.validate():
-            #user = User()
+            client = Individ_Info()
             #user.username = form.username.data
             #user.email = form.email.data
             #user.save()
             #redirect('register')
-        return render_response('clientpage_addedit', form=form)
+
+        return self.renderer('clientpage_addedit', form=form)
 
 
         # Douglas, previous form call
@@ -166,8 +167,8 @@ class ClientViews(object):
         return dict(client=client, title=full_name, loc=loc)
     
     # Douglas, this should be an existing application page
+    # Douglas, removed permission='edit'
     @view_config(route_name='clientpage_edit',
-                permission='edit',
                 renderer='templates/clientpage_addedit.jinja2')
     def clientpage_edit(self):
         #uid = int(self.request.matchdict['uid'])
@@ -175,20 +176,20 @@ class ClientViews(object):
         #title = 'Edit ' + page.title
         
         # Get the id of the username, the section to edit, and query for data pertaining to the user
-        id = int(self.request.matchdict['uid']
+        id = int(self.request.matchdict['uid'])
         loc = self.request.matchdict['loc']
         if loc == 'individual':
             # Douglas, This is where WTForm-Alchemy should come into play. Testing with known query first.
-            user = DBSession.query(Individ_Info).filter_by(uid=uid).one()
-            form = Individ_Info_UpdateForm(request.POST)
+            client = DBSession.query(Individ_Info).filter_by(id=id).one()
+            form = Individ_Info_UpdateForm(self.request.POST)
 
         # WTForms
         #form = ProfileForm(request,POST,id)  
         
-        if request.method == 'POST' and form.validate():
-            form.populate_obj(user)
+        if self.request.method == 'POST' and form.validate():
+            form.populate_obj(client)
             # Add the changes to the DBSession
-            DBSession.add(user)
+            DBSession.add(client)
             DBSession.commit()
             
             # Example using Flask
@@ -199,7 +200,7 @@ class ClientViews(object):
             return HTTPFound(url)
 
         
-        return render_response('clientpage_addedit.jinja2', form=form)
+        return dict(client=client, form=form)
             
         
         # Douglas, old Colander/Deform forms

@@ -521,8 +521,9 @@ class Post_Grad(Base):
 
 class Root(object):
     # Douglas, ... (Allow, 'group:editors', 'edit')]
+    # .... (Allow, Authenticated, 'edit')
     __acl__ = [(Allow, Everyone, 'view'),
-                (Allow, Authenticated, 'edit')]
+            (Allow, 'group:editors', 'edit')]
 
     def __init__(self, request):
         pass

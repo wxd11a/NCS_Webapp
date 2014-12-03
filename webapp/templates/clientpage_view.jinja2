@@ -1,6 +1,6 @@
 {% extends 'layout.jinja2' %}
 {% block content %}
-
+		<a href="{{ request.route_url('clientpage_edit', uid=client.id, loc=loc) }}">Edit</a>
 		<div id="main">
 			<div id="appnav">
 				<ul>
@@ -12,8 +12,8 @@
 			</div>
 		</div>
 
-		<!--<div id="appnav">
-			<a id="individualInformation">Individual's Information</a>
+		<div id="appnav">
+			<a href="{{request.route_url('clientpage_view', uid=client.id, loc='individual') }}" id="individualInformation">Individual's Information</a>
 			<a id="education">Education</a>
 			<a id="profesionalInformation">Professional Information</a>
 			<a id="workHistory">Work History</a>
@@ -24,5 +24,5 @@
 			<a id="practiceLocation">Practice Location Information</a>
 			<a id="disclosureQuestions">Disclosure Questions</a>
 			<a id="standardAAR">Standard Authorization, Attestation, and Release</a>
-		</div> -->
+		</div>
 {% endblock %}
