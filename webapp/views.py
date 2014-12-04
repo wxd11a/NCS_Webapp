@@ -43,7 +43,7 @@ class ClientViews(object):
         self.request = request
         self.renderer = get_renderer("templates/layout.jinja2")
         #self.layout = renderer.implementation().macros['layout']
-        self.logged_in = authenticated_userid(request)
+        #self.logged_in = authenticated_userid(request)
     
     # Douglas, old Colander/Deform form generation
     #@reify
@@ -116,7 +116,7 @@ class ClientViews(object):
     def clientpage_view(self):
 
         # Retrieving the uid (aka Individ_Info.id) as selected by the link from the previous page
-        id = int(self.request.matchdict['uid'])
+        id = self.request.matchdict['uid']
         # Get the selected navigation view (ex. Individual Information, Education, etc.)
         loc = self.request.matchdict['loc']
 
@@ -133,8 +133,9 @@ class ClientViews(object):
 	# Standard Authorization, Attestation, and Release
 
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
-        if loc == 'individual':
-            client = DBSession.query(Individ_Info).filter_by(id=id).one()
+        client = DBSession.query(Individ_Info).filter_by(id=id).one()
+        #if loc == 'individual':
+            #client = DBSession.query(Individ_Info).filter_by(id=id).one()
         #elif loc == 'education':
         #    #
         #elif loc == 'education':

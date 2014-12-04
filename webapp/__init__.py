@@ -34,6 +34,8 @@ def main(global_config, **settings):
     config.set_authorization_policy(authz_policy)
 
     config.add_route('client_view', '/')
+    # Douglas, if the static view is added below the routes with two parameters then the static page will not be rendered.
+    config.add_static_view(name='static', path='webapp:static', cache_max_age=3600)
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
     config.add_route('clientpage_add', '/add')
@@ -41,8 +43,6 @@ def main(global_config, **settings):
     config.add_route('clientpage_view', '/{uid}/{loc}')
     config.add_route('clientpage_edit', '/{uid}/{loc}/edit')
     config.add_route('clientpage_delete', '/{uid}/delete')
-    config.add_static_view(name='static', path='webapp:static', cache_max_age=3600)
-    config.add_static_view('deform_static', 'deform:static/')
 
     config.scan()
     return config.make_wsgi_app()
