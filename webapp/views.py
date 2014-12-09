@@ -192,7 +192,6 @@ class ClientViews(object):
 
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
         #client = DBSession.query(IndividInfo).filter_by(id=id).one()
-        # Douglas, using first() while the applications don't contain all the information
         if loc == 'individual':
             client = DBSession.query(IndividInfo).filter_by(id=id).one()
             # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
@@ -240,30 +239,41 @@ class ClientViews(object):
         # Get the id of the username, the section to edit, and query for data pertaining to the user
         id = int(self.request.matchdict['uid'])
         loc = self.request.matchdict['loc']
+
+        # Query with first() as not to return an error if information is missing
         if loc == 'individual':
-            # Douglas, This is where WTForm-Alchemy should come into play. Testing with known query first.
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(IndividInfo).filter_by(id=id).first()
             form = IndividInfoUpdateForm(self.request.POST)
         elif loc == 'education':
-            client = DBSession.query(EducationBackground).filter_by(id=id).one()
+            client = DBSession.query(EducationBackground).filter_by(id=id).first()
+            form = EducationBackgroundUpdateForm(self.request.POST)
         elif loc == 'professional':
-            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).one()
+            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
+            form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST)
         elif loc == 'history':
-            client = DBSession.query(WorkHistory).filter_by(id=id).one()
+            client = DBSession.query(WorkHistory).filter_by(id=id).first()
+            form = WorkHistoryUpdateForm(self.request.POST)
         elif loc == 'affiliations':
-            client = DBSession.query(Hospital).filter_by(id=id).one()
+            client = DBSession.query(Hospital).filter_by(id=id).first()
+            form = HospitalUpdateForm(self.request.POST)
         elif loc == 'references':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(IndividInfo).filter_by(id=id).first()
+            form = IndividInfoUpdateForm(self.request.POST)
         elif loc == 'insurancecoverage':
-            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).one()
+            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
+            form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST)
         elif loc == 'callcoverage':
-            client = DBSession.query(CallCoverage).filter_by(id=id).one()
+            client = DBSession.query(CallCoverage).filter_by(id=id).first()
+            form = CallCoverageUpdateForm(self.request.POST)
         elif loc == 'location':
-            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).one()
+            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
+            form = PracticeLocationInfoUpdateForm(self.request.POST)
         elif loc == 'disclosure':
-            client = DBSession.query(DisclosureQuestions).filter_by(id=id).one()
+            client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
+            form = DisclosureQuestionsUpdateForm(self.request.POST)
         elif loc == 'standards':
-            client = DBSession.query(MalpracticeClaims).filter_by(id=id).one()
+            client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
+            form = MalpracticeClaimsUpdateForm(self.request.POST)
 
         # WTForms
         #form = ProfileForm(request,POST,id)  
