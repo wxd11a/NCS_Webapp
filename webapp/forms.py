@@ -26,6 +26,8 @@ from .models import (
 
 # Douglas, using WTForm-Alchemy to generate the forms since Deform requires its own schema definition.
 #   WTF-Alchemy ties its form schema to the SQLAlchemy model schema. This makes form generation manageable.
+
+# Douglas, possibly could generate labels here to avaoid autoescaping the html
 class IndividInfoForm(ModelForm):
     class Meta:
         model = IndividInfo

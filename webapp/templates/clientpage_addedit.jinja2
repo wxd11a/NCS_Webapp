@@ -1,16 +1,35 @@
 {% extends 'layout.jinja2' %}
 
 {% block content %}
-<div id="appnav">
-<form action="{{ request.path }}" method="POST">
-	<ul>
-	{# Format with "|replace("_", "") and |capitalize #}
-	{% for field in form %}
-		<li>{{ field.label }}: {{ field }}</li>
-	{% endfor %}
-	
-	{# Still need a submit button #}
-</form>	
+<div id="flexcontainer_row">
+	<form action="{{ request.path }}" method="POST" class="col1">
+		<ul>
+		{# Format with "|replace("_", "") and |capitalize #}
+		{# {% set field_line = '<li>'|safe + field.label|replace("_", " ")|capitalize + ': '|safe + field|capitalize + '</li>'|safe %} #}
+		{# {{ field_line }} #}
+
+		{% for field in form %}
+			<li>{{ field.label|safe|capitalize|replace("_", " ") }}: {{ field}}</li>
+		{% endfor %}
+		</ul>
+		
+		{# Still need a submit button #}
+	</form>	
+	<div class="col2">
+		<ul>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='individual') }}" id="individualInformation">Individual's Information</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='education') }}" id="education">Education</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='professional') }}" id="profesionalInformation">Professional Information</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='history') }}" id="workHistory">Work History</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='affiliations') }}" id="hospitalAffiliations">Hospital Affiliations</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='references') }}" id="references">References</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='insurancecoverage') }}" id="insuranceCoverage">Insurance Coverage</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='callcoverage') }}" id="callCoverage">Call Coverage</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='location') }}" id="practiceLocation">Practice Location Information</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='disclosure') }}" id="disclosureQuestions">Disclosure Questions</a></li>
+		       <li><a href="{{request.route_url('clientpage_view', uid=client.id, loc='standards') }}" id="standardAAR">Standard Authorization, Attestation, and Release</a></li> 
+		</ul>
+	</div>
 </div>
 {% endblock %}
 

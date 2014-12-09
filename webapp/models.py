@@ -77,7 +77,7 @@ class IndividInfo(Base):
     # Changed application_id to id because it is too verbose and can be identified by its class when called
     id = Column(Integer, primary_key=True)
     last_name = Column(Text, key='Last name')
-    first_name = Column('First name',Text, key='First name')
+    first_name = Column(Text, key='First name')
     reference = Column(Integer, key='Reference')
     type_professional = Column(Text, key='Type')
     middle_name = Column(Text, key='Middle name')
