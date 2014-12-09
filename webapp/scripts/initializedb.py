@@ -37,25 +37,25 @@ from ..models import (
         Base
         )
 
-from ..forms import (
-    IndividInfoForm,
-    IndividInfoUpdateForm,
-    EducationBackgroundForm,
-    PostGradForm,
-    LicenseCertificateForm,
-    LicenseTypesForm,
-    ProfessionalSpecialtyInfoForm,
-    WorkHistoryForm,
-    HospitalForm,
-    ProfessionalLiabilityInsuranceCoverageForm,
-    CallCoverageForm,
-    PracticeLocationInfoForm,
-    CertsForm,
-    AddOfficeProceduresForm,
-    DisclosureQuestionsForm,
-    DisclosureQuestionsExplainationsForm,
-    MalpracticeClaimsForm
-    )
+#from ..forms import (
+#    IndividInfoForm,
+#    IndividInfoUpdateForm,
+#    EducationBackgroundForm,
+#    PostGradForm,
+#    LicenseCertificateForm,
+#    LicenseTypesForm,
+#    ProfessionalSpecialtyInfoForm,
+#    WorkHistoryForm,
+#    HospitalForm,
+#    ProfessionalLiabilityInsuranceCoverageForm,
+#    CallCoverageForm,
+#    PracticeLocationInfoForm,
+#    CertsForm,
+#    AddOfficeProceduresForm,
+#    DisclosureQuestionsForm,
+#    DisclosureQuestionsExplainationsForm,
+#    MalpracticeClaimsForm
+#    )
 
 
 def usage(argv):

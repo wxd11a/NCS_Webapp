@@ -46,20 +46,35 @@ from .forms import (
     IndividInfoForm,
     IndividInfoUpdateForm,
     EducationBackgroundForm,
+    EducationBackgroundUpdateForm,
     PostGradForm,
+    PostGradUpdateForm,
     LicenseCertificateForm,
+    LicenseCertificateUpdateForm,
     LicenseTypesForm,
+    LicenseTypesUpdateForm,
     ProfessionalSpecialtyInfoForm,
+    ProfessionalSpecialtyInfoUpdateForm,
     WorkHistoryForm,
+    WorkHistoryUpdateForm,
     HospitalForm,
+    HospitalUpdateForm,
     ProfessionalLiabilityInsuranceCoverageForm,
+    ProfessionalLiabilityInsuranceCoverageUpdateForm,
     CallCoverageForm,
+    CallCoverageUpdateForm,
     PracticeLocationInfoForm,
+    PracticeLocationInfoUpdateForm,
     CertsForm,
+    CertsUpdateForm,
     AddOfficeProceduresForm,
+    AddOfficeProceduresUpdateForm,
     DisclosureQuestionsForm,
+    DisclosureQuestionsUpdateForm,
     DisclosureQuestionsExplainationsForm,
-    MalpracticeClaimsForm
+    DisclosureQuestionsExplainationsUpdateForm,
+    MalpracticeClaimsForm,
+    MalpracticeClaimsUpdateForm
     )
 
 from .security import USERS
@@ -84,6 +99,7 @@ class ClientViews(object):
     def __init__(self, request):
         self.request = request
         self.renderer = get_renderer("templates/layout.jinja2")
+        self.full_name = ''
         #self.layout = renderer.implementation().macros['layout']
         #self.logged_in = authenticated_userid(request)
     
@@ -176,39 +192,41 @@ class ClientViews(object):
 
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
         #client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        # Douglas, using first() while the applications don't contain all the information
         if loc == 'individual':
             client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
+            full_name = "{}, {}".format(client.last_name, client.first_name)
+            self.full_name = full_name
         elif loc == 'education':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(EducationBackground).filter_by(id=id).first()
         elif loc == 'professional':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).one()
         elif loc == 'history':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(WorkHistory).filter_by(id=id).one()
         elif loc == 'affiliations':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(Hospital).filter_by(id=id).one()
         elif loc == 'references':
             client = DBSession.query(IndividInfo).filter_by(id=id).one()
         elif loc == 'insurancecoverage':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).one()
         elif loc == 'callcoverage':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(CallCoverage).filter_by(id=id).one()
         elif loc == 'location':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).one()
         elif loc == 'disclosure':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(DisclosureQuestions).filter_by(id=id).one()
         elif loc == 'standards':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(MalpracticeClaims).filter_by(id=id).one()
 
-        # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
-        full_name = "{}, {}".format(client.last_name, client.first_name)
 
         # Getting the alternative name for use in printing
-        mapper = inspect(client)
-        docs = []
-        for column in mapper.attrs:
-            docs.append(column.key)
+        #mapper = inspect(client)
+        #docs = []
+        #for column in mapper.attrs:
+        #    docs.append(column.key)
 
-        return dict(client=client, title=full_name, loc=loc)
+        return dict(client=client, title=self.full_name, loc=loc)
     
     # Douglas, this should be an existing application page
     # Douglas, removed permission='edit'
@@ -226,6 +244,26 @@ class ClientViews(object):
             # Douglas, This is where WTForm-Alchemy should come into play. Testing with known query first.
             client = DBSession.query(IndividInfo).filter_by(id=id).one()
             form = IndividInfoUpdateForm(self.request.POST)
+        elif loc == 'education':
+            client = DBSession.query(EducationBackground).filter_by(id=id).one()
+        elif loc == 'professional':
+            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).one()
+        elif loc == 'history':
+            client = DBSession.query(WorkHistory).filter_by(id=id).one()
+        elif loc == 'affiliations':
+            client = DBSession.query(Hospital).filter_by(id=id).one()
+        elif loc == 'references':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'insurancecoverage':
+            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).one()
+        elif loc == 'callcoverage':
+            client = DBSession.query(CallCoverage).filter_by(id=id).one()
+        elif loc == 'location':
+            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).one()
+        elif loc == 'disclosure':
+            client = DBSession.query(DisclosureQuestions).filter_by(id=id).one()
+        elif loc == 'standards':
+            client = DBSession.query(MalpracticeClaims).filter_by(id=id).one()
 
         # WTForms
         #form = ProfileForm(request,POST,id)  
