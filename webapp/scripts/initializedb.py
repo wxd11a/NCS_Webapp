@@ -13,17 +13,33 @@ from pyramid.scripts.common import parse_vars
 
 # Douglas, removed Page
 from ..models import (
-    DBSession,
-    Individ_Info,
-    Education_Background,
-    Post_Grad,
-    Base
-    )
+        IndividInfo,
+        EducationBackground,
+        PostGrad,
+        IndividPostGrad,
+        LicenseCertificates,
+        LicenseTypes,
+        IndividLicense,
+        ProfessionalSpecialtyInfo,
+        WorkHistory,
+        Hospital,
+        IndividHosp,
+        ProfessionalLiabilityInsuranceCoverage,
+        CallCoverage,
+        PracticeLocationInfo,
+        IndividPracticeLoc,
+        Certs,
+        AddOfficeProcedures,
+        DisclosureQuestions,
+        DisclosureQuestionsExplanations,
+        MalpracticeClaims,
+        Base
+        )
 
 from ..forms import (
-    Individ_Info_Form,
-    Individ_Info_UpdateForm,
-    Education_Background_Form
+    IndividInfoForm,
+    IndividInfoUpdateForm,
+    EducationBackgroundForm
     )
 
 
@@ -36,7 +52,8 @@ def usage(argv):
 
 def main(argv=sys.argv):
     # Pyramid site has it as "if len(argv) != 2;
-    if len(argv) < 2:
+    # Douglas, was len(argv) < 2
+    if len(argv) != 2:
         usage(argv)
     config_uri = argv[1]
     options = parse_vars(argv[2:])

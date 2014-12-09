@@ -1,5 +1,5 @@
-import colander
-import deform.widget
+#import colander
+#import deform.widget
 
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPFound

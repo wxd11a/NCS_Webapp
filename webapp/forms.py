@@ -1,19 +1,40 @@
 from wtforms_alchemy import ModelForm
 from wtforms_components import DateField
-from .models import Individ_Info, Education_Background
+from .models import (
+        IndividInfo,
+        EducationBackground,
+        PostGrad,
+        IndividPostGrad,
+        LicenseCertificates,
+        LicenseTypes,
+        IndividLicense,
+        ProfessionalSpecialtyInfo,
+        WorkHistory,
+        Hospital,
+        IndividHosp,
+        ProfessionalLiabilityInsuranceCoverage,
+        CallCoverage,
+        PracticeLocationInfo,
+        IndividPracticeLoc,
+        Certs,
+        AddOfficeProcedures,
+        DisclosureQuestions,
+        DisclosureQuestionsExplanations,
+        MalpracticeClaims
+        )
 
 # Douglas, using WTForm-Alchemy to generate the forms since Deform requires its own schema definition.
 #   WTF-Alchemy ties its form schema to the SQLAlchemy model schema. This makes form generation manageable.
-class Individ_Info_Form(ModelForm):
+class IndividInfoForm(ModelForm):
     class Meta:
-        model = Individ_Info
+        model = IndividInfo
     
     @classmethod
     def get_session(self):
         return self.DBSession
 
 # An update class for Individ_Info so not all the vields need to be validated
-class Individ_Info_UpdateForm(Individ_Info_Form):
+class IndividInfoUpdateForm(IndividInfoForm):
     class Meta:
         all_fields_optional = True
     
@@ -21,7 +42,7 @@ class Individ_Info_UpdateForm(Individ_Info_Form):
     def get_session(self):
         return self.DBSession
 
-class Education_Background_Form(ModelForm):
+class EducationBackgroundForm(ModelForm):
     class Meta:
-        model = Education_Background
+        model = EducationBackground
 
