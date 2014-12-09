@@ -38,7 +38,7 @@ from .models import (
         Certs,
         AddOfficeProcedures,
         DisclosureQuestions,
-        DisclosureQuestionsExplanations,
+        DisclosureQuestionsExplainations,
         MalpracticeClaims
         )
 
@@ -88,7 +88,7 @@ class ClientViews(object):
                 renderer='templates/client_view.jinja2')
     def client_view(self):
         #pages = DBSession.query(Page).order_by(Page.title)
-        clients = DBSession.query(Individ_Info).order_by(Individ_Info.last_name)
+        clients = DBSession.query(IndividInfo).order_by(IndividInfo.last_name)
         #return dict(title='Welcome to the Client Page', pages=pages)
         return dict(title='Client List',clients=clients)
 
@@ -101,7 +101,7 @@ class ClientViews(object):
         
         form = RegistrationForm(self.request.POST)
         if self.request.method == 'POST' and form.validate():
-            client = Individ_Info()
+            client = IndividInfo()
             #user.username = form.username.data
             #user.email = form.email.data
             #user.save()
@@ -142,7 +142,7 @@ class ClientViews(object):
                 renderer='templates/clientpage_view.jinja2')
     def clientpage_view(self):
 
-        # Retrieving the uid (aka Individ_Info.id) as selected by the link from the previous page
+        # Retrieving the uid (aka IndividInfo.id) as selected by the link from the previous page
         id = self.request.matchdict['uid']
         # Get the selected navigation view (ex. Individual Information, Education, etc.)
         loc = self.request.matchdict['loc']
@@ -160,9 +160,9 @@ class ClientViews(object):
 	# Standard Authorization, Attestation, and Release
 
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
-        client = DBSession.query(Individ_Info).filter_by(id=id).one()
+        client = DBSession.query(IndividInfo).filter_by(id=id).one()
         #if loc == 'individual':
-            #client = DBSession.query(Individ_Info).filter_by(id=id).one()
+            #client = DBSession.query(IndividInfo).filter_by(id=id).one()
         #elif loc == 'education':
         #    #
         #elif loc == 'education':
@@ -208,8 +208,8 @@ class ClientViews(object):
         loc = self.request.matchdict['loc']
         if loc == 'individual':
             # Douglas, This is where WTForm-Alchemy should come into play. Testing with known query first.
-            client = DBSession.query(Individ_Info).filter_by(id=id).one()
-            form = Individ_Info_UpdateForm(self.request.POST)
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            form = IndividInfoUpdateForm(self.request.POST)
 
         # WTForms
         #form = ProfileForm(request,POST,id)  
