@@ -19,7 +19,7 @@ from .models import (
         Certs,
         AddOfficeProcedures,
         DisclosureQuestions,
-        DisclosureQuestionsExplanations,
+        DisclosureQuestionsExplainations,
         MalpracticeClaims
         )
 

@@ -114,10 +114,10 @@ class IndividInfo(Base):
     post_grads = association_proxy('individ_pgs', 'post_grad')
 
     # for association between assoc table and pratice_loc
-    practice_locs = assocation_proxy('individ_practicelocs', 'practice_loc')
+    practice_locs = association_proxy('individ_practicelocs', 'practice_loc')
 
     # for association between assoc table and hospital
-    hospitals = assocaition_proxy('individ_hosps', 'hospital')
+    hospitals = association_proxy('individ_hosps', 'hospital')
 
 
 
@@ -175,7 +175,7 @@ class IndividPostGrad(Base):
     pg_id = Column(Integer, ForeignKey('post_grad.id'), primary_key=True)
 
     # bidirecitonal attribute/collection of individ_info/individ_pg
-    individ_info = relationship(Individ_Info,
+    individ_info = relationship(IndividInfo,
                         backref=backref("individ_pgs",
                             cascade="all, delete-orphan")
                         )
@@ -523,7 +523,7 @@ class DisclosureQuestions:
     __tablename__ = 'disclosure_questions'
     
     # Douglas, should id also be a primary key since it is a fk to individ_id?
-    id = Column(Integer, ForeignKey('individ_info.id')
+    id = Column(Integer, ForeignKey('individ_info.id'))
     question_number = Column(Integer, primary_key=True)
     question_answer = Column(Integer)
 

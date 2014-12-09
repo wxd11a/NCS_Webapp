@@ -13,6 +13,7 @@ from pyramid.scripts.common import parse_vars
 
 # Douglas, removed Page
 from ..models import (
+        DBSession,
         IndividInfo,
         EducationBackground,
         PostGrad,
@@ -31,7 +32,7 @@ from ..models import (
         Certs,
         AddOfficeProcedures,
         DisclosureQuestions,
-        DisclosureQuestionsExplanations,
+        DisclosureQuestionsExplainations,
         MalpracticeClaims,
         Base
         )
@@ -67,5 +68,5 @@ def main(argv=sys.argv):
         #model = MyModel(name='one', value=1)
         # Douglas, change model = ... to suit the new DB. Possibly with a users table for authentication.
         #model = Page(title='Root', body='<p>Root</p>')
-        model = Individ_Info(id=int(1), last_name='Cassingham', first_name='Scott', type_professional='anethesiologist')
+        model = IndividInfo(id=int(1), last_name='Cassingham', first_name='Scott', type_professional='anethesiologist')
         DBSession.add(model)
