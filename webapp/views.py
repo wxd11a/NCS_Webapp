@@ -99,6 +99,7 @@ class ClientViews(object):
     def __init__(self, request):
         self.request = request
         self.renderer = get_renderer("templates/layout.jinja2")
+        self.id = ''
         self.full_name = ''
         #self.layout = renderer.implementation().macros['layout']
         #self.logged_in = authenticated_userid(request)
@@ -174,7 +175,7 @@ class ClientViews(object):
     def clientpage_view(self):
 
         # Retrieving the uid (aka IndividInfo.id) as selected by the link from the previous page
-        id = self.request.matchdict['uid']
+        uid = self.request.matchdict['uid']
         # Get the selected navigation view (ex. Individual Information, Education, etc.)
         loc = self.request.matchdict['loc']
 
@@ -192,31 +193,68 @@ class ClientViews(object):
 
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
         #client = DBSession.query(IndividInfo).filter_by(id=id).one()
+
+        # Query with first() as not to return an error if information is missing
         if loc == 'individual':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
-            # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
+            client = DBSession.query(IndividInfo).filter_by(id=id).first()
             full_name = "{}, {}".format(client.last_name, client.first_name)
             self.full_name = full_name
+            form = IndividInfoUpdateForm(self.request.POST)
         elif loc == 'education':
             client = DBSession.query(EducationBackground).filter_by(id=id).first()
+            form = EducationBackgroundUpdateForm(self.request.POST)
         elif loc == 'professional':
-            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).one()
+            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
+            form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST)
         elif loc == 'history':
-            client = DBSession.query(WorkHistory).filter_by(id=id).one()
+            client = DBSession.query(WorkHistory).filter_by(id=id).first()
+            form = WorkHistoryUpdateForm(self.request.POST)
         elif loc == 'affiliations':
-            client = DBSession.query(Hospital).filter_by(id=id).one()
+            client = DBSession.query(Hospital).filter_by(id=id).first()
+            form = HospitalUpdateForm(self.request.POST)
         elif loc == 'references':
-            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+            client = DBSession.query(IndividInfo).filter_by(id=id).first()
+            form = IndividInfoUpdateForm(self.request.POST)
         elif loc == 'insurancecoverage':
-            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).one()
+            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
+            form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST)
         elif loc == 'callcoverage':
-            client = DBSession.query(CallCoverage).filter_by(id=id).one()
+            client = DBSession.query(CallCoverage).filter_by(id=id).first()
+            form = CallCoverageUpdateForm(self.request.POST)
         elif loc == 'location':
-            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).one()
+            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
+            form = PracticeLocationInfoUpdateForm(self.request.POST)
         elif loc == 'disclosure':
-            client = DBSession.query(DisclosureQuestions).filter_by(id=id).one()
+            client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
+            form = DisclosureQuestionsUpdateForm(self.request.POST)
         elif loc == 'standards':
-            client = DBSession.query(MalpracticeClaims).filter_by(id=id).one()
+            client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
+            form = MalpracticeClaimsUpdateForm(self.request.POST)
+        #if loc == 'individual':
+        #    client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        #    # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
+        #    full_name = "{}, {}".format(client.last_name, client.first_name)
+        #    self.full_name = full_name
+        #elif loc == 'education':
+        #    client = DBSession.query(EducationBackground).filter_by(id=id).first()
+        #elif loc == 'professional':
+        #    client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).one()
+        #elif loc == 'history':
+        #    client = DBSession.query(WorkHistory).filter_by(id=id).one()
+        #elif loc == 'affiliations':
+        #    client = DBSession.query(Hospital).filter_by(id=id).one()
+        #elif loc == 'references':
+        #    client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        #elif loc == 'insurancecoverage':
+        #    client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).one()
+        #elif loc == 'callcoverage':
+        #    client = DBSession.query(CallCoverage).filter_by(id=id).one()
+        #elif loc == 'location':
+        #    client = DBSession.query(PracticeLocationInfo).filter_by(id=id).one()
+        #elif loc == 'disclosure':
+        #    client = DBSession.query(DisclosureQuestions).filter_by(id=id).one()
+        #elif loc == 'standards':
+        #    client = DBSession.query(MalpracticeClaims).filter_by(id=id).one()
 
 
         # Getting the alternative name for use in printing
@@ -225,7 +263,10 @@ class ClientViews(object):
         #for column in mapper.attrs:
         #    docs.append(column.key)
 
-        return dict(client=client, title=self.full_name, loc=loc)
+        if self.request.method == 'POST' and form.validate():
+            form.populate_obj(client)
+        # Douglas, added form=form since wtforms-alchemy generates the page in a less error prone way
+        return dict(client=client,form=form, title=self.full_name, loc=loc)
     
     # Douglas, this should be an existing application page
     # Douglas, removed permission='edit'
@@ -236,8 +277,8 @@ class ClientViews(object):
         # page = DBSession.query(Page).filter_by(uid=uid).one()
         #title = 'Edit ' + page.title
         
-        # Get the id of the username, the section to edit, and query for data pertaining to the user
-        id = int(self.request.matchdict['uid'])
+        # Get the user id of the practitioner, the section to edit, and query for data pertaining to the user
+        uid = self.request.matchdict['uid']
         loc = self.request.matchdict['loc']
 
         # Query with first() as not to return an error if information is missing
@@ -288,7 +329,7 @@ class ClientViews(object):
             #redirect('clientpage_edit')
             
             # Douglas, not sure about this url response with a render_reponse
-            url = self.request.route_url('clientpage_view', id=id)
+            url = self.request.route_url('clientpage_view', uid=uid)
             return HTTPFound(url)
 
         

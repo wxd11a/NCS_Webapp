@@ -73,7 +73,7 @@ class LicenseCertificateForm(ModelForm):
     class Meta:
         model = LicenseCertificate
 
-class LicenseCertificationUpdateForm(LicenseCertificationForm):
+class LicenseCertificateUpdateForm(LicenseCertificateForm):
     class Meta:
         all_fields_optional = True
     
@@ -85,7 +85,7 @@ class LicenseTypesForm(ModelForm):
     class Meta:
         model = LicenseTypes
 
-class LicenseTypesUpdateForm(LicenseTypesUpdateForm):
+class LicenseTypesUpdateForm(LicenseTypesForm):
     class Meta:
         all_fields_optional = True
     
@@ -133,7 +133,7 @@ class ProfessionalLiabilityInsuranceCoverageForm(ModelForm):
     class Meta:
         model = ProfessionalLiabilityInsuranceCoverage
 
-class ProfessionalLiabilityInsuranceCoverageUpdateForm(ProfessionalLiabilityInsuranceCoverageUpdateForm):
+class ProfessionalLiabilityInsuranceCoverageUpdateForm(ProfessionalLiabilityInsuranceCoverageForm):
     class Meta:
         all_fields_optional = True
     

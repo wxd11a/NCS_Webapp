@@ -5,8 +5,13 @@
 			<div class="col1">
 				<ul>	
 					{# Format with "|replace("_", "") and |capitalize #}
-					{% for ckey in client.__mapper__.columns.keys() %}
+					{# {% for ckey in client.__mapper__.columns.keys() %}
 					<li class='cattr'>{{ckey|replace("_", " ")|capitalize}}: {{ client[ckey]|capitalize }}</li>
+					{% endfor %} #}
+					
+					{# Generating the page with WTForms-Alchemy so as to be less error prone #}
+					{% for field in form %}
+						<li>{{ field.label|safe|capitalize|replace("_", " ") }}: {{ field.data}}</li>
 					{% endfor %}
 				</ul> </div>
 	
