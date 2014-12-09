@@ -187,7 +187,7 @@ p {
 	
 	padding: 8px;
 
-	width: 33%;
+	width: 50%;
 /*	background-color: rgb(253,245,230); */
 	background-color: rgb(240,232,217);	
 }
@@ -211,7 +211,7 @@ p {
 	margin: 0 20px;
 	padding: 8px;
 	
-	width: 33%;
+	width: 30%;
 /*	background-color: rgb(253,245,230); */
 	background-color: rgb(240,232,217);	
 	
@@ -327,7 +327,7 @@ footer {
 #main {
 /*	background: #FFFFFF; */
 	min-height: 400px;
-	width:70%;
+	width:80%; /* was 70% */
 	margin: 85px auto 0;
 /*	padding-bottom: 40px; */
 	display: -webkit-flex;
