@@ -28,7 +28,7 @@ from ..models import (
         ProfessionalLiabilityInsuranceCoverage,
         CallCoverage,
         PracticeLocationInfo,
-        IndividPracticeLoc,
+        IndividPracticeLocationInfo,
         Certs,
         AddOfficeProcedures,
         DisclosureQuestions,
@@ -37,25 +37,6 @@ from ..models import (
         Base
         )
 
-#from ..forms import (
-#    IndividInfoForm,
-#    IndividInfoUpdateForm,
-#    EducationBackgroundForm,
-#    PostGradForm,
-#    LicenseCertificateForm,
-#    LicenseTypesForm,
-#    ProfessionalSpecialtyInfoForm,
-#    WorkHistoryForm,
-#    HospitalForm,
-#    ProfessionalLiabilityInsuranceCoverageForm,
-#    CallCoverageForm,
-#    PracticeLocationInfoForm,
-#    CertsForm,
-#    AddOfficeProceduresForm,
-#    DisclosureQuestionsForm,
-#    DisclosureQuestionsExplainationsForm,
-#    MalpracticeClaimsForm
-#    )
 
 
 def usage(argv):
@@ -75,6 +56,8 @@ def main(argv=sys.argv):
     setup_logging(config_uri)
     settings = get_appsettings(config_uri, options=options)
     engine = engine_from_config(settings, 'sqlalchemy.')
+    # .prepare is used for auto_map
+    Base.prepare(engine, reflect=True)
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
@@ -84,3 +67,4 @@ def main(argv=sys.argv):
         #model = Page(title='Root', body='<p>Root</p>')
         model = IndividInfo(id=int(1), last_name='Cassingham', first_name='Scott', type_professional='anethesiologist')
         DBSession.add(model)
+

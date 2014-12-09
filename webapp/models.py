@@ -18,7 +18,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship, backref
 
 from sqlalchemy.ext.associationproxy import association_proxy
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.automap import automap_base
+#from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
     scoped_session,
@@ -34,8 +35,9 @@ from zope.sqlalchemy import ZopeTransactionExtension
 # It will also open and close database connections for us transparently when needed.
 # http://pyramid-blogr.readthedocs.org/en/latest/basic_models.html
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-Base = declarative_base()
-
+#Base = declarative_base()
+# Douglas, trying out AutomapBase which actually includes the declarative_base()
+Base = automap_base()
 
 # Douglas, lookup cryptacular for strong one-way encryption for hashed passwords.
 # Douglas, do I want users within .models or .security?
@@ -46,14 +48,6 @@ Base = declarative_base()
 #    password = Column(unicode(255), nullable=False)
 #    last_logged = Column(DateTime, default=datetime.datetime.utcnow)
 
-
-#class MyModel(Base):
-#    __tablename__ = 'models'
-#    id = Column(Integer, primary_key=True)
-#    name = Column(Text)
-#    value = Column(Integer)
-#
-#Index('my_index', MyModel.name, unique=True, mysql_length=255)
 
 # Page should be a table that holds all the applications with the name associated with each application.
 #   It might be better to remove this table since it really is an alias for application_id and the user name
@@ -117,8 +111,8 @@ class IndividInfo(Base):
     # for association between assoc table and license_certificate
     license_certificates = association_proxy('individ_licenses', 'license_certificate')
 
-    # for association between assoc table and pratice_loc
-    practice_locs = association_proxy('individ_practice_locs', 'practice_loc')
+    # for association between assoc table and pratice_location_info
+    practice_locacation_infos = association_proxy('individ_practice_locs', 'practice_location_info')
 
     # for association between assoc table and hospital
     hospitals = association_proxy('individ_hosps', 'hospital')
@@ -349,7 +343,8 @@ class CallCoverage(Base):
 class PracticeLocationInfo(Base):
     __tablename__ = 'practice_location_info'
 
-    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    # Douglas, removed the ForeignKey('individ_info.id') because there is an assoc table between the two
+    id = Column(Integer, primary_key=True)
     practice_location_name = Column(Text)
     service_type = Column(Integer)
     practice_name_in_directory = Column(Text)
@@ -504,20 +499,20 @@ class PracticeLocationInfo(Base):
     anasthesia_administrator = Column(Text)
 
 # Association table
-class IndividPracticeLoc(Base):
-    __tablename__ = 'individ_practice_loc'
+class IndividPracticeLocationInfo(Base):
+    __tablename__ = 'individ_practice_location_info'
 
     I_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     Lo_id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
 
-    # bidirecitonal attribute/collection of individ_info/individ_practicelocs
+    # bidirecitonal attribute/collection of individ_info/individ_practice_location_info
     individ_info = relationship(IndividInfo,
-                        backref=backref("individ_practice_locs",
+                        backref=backref("individ_practice_location_infos",
                             cascade="all, delete-orphan")
                         )
 
     # reference to the PracticeLoc object
-    practice_loc = relationship("PracticeLocationInfo")
+    practice_location_info = relationship("PracticeLocationInfo")
 
 class Certs(Base):
     __tablename__ = 'certs'

@@ -2,6 +2,7 @@ from wtforms_alchemy import ModelForm#, ModelFieldList
 from wtforms.fields import FormField
 from wtforms_components import DateField
 from .models import (
+        DBSession,
         IndividInfo,
         EducationBackground,
         PostGrad,
@@ -16,7 +17,7 @@ from .models import (
         ProfessionalLiabilityInsuranceCoverage,
         CallCoverage,
         PracticeLocationInfo,
-        IndividPracticeLoc,
+        IndividPracticeLocationInfo,
         Certs,
         AddOfficeProcedures,
         DisclosureQuestions,
@@ -24,10 +25,9 @@ from .models import (
         MalpracticeClaims
         )
 
-# Douglas, using WTForm-Alchemy to generate the forms since Deform requires its own schema definition.
-#   WTF-Alchemy ties its form schema to the SQLAlchemy model schema. This makes form generation manageable.
+# WTF-Alchemy ties its form schema to the SQLAlchemy model schema. This makes form generation manageable.
 
-# Douglas, possibly could generate labels here to avaoid autoescaping the html
+# Douglas, possibly could generate labels here to avoid autoescaping the html
 class IndividInfoForm(ModelForm):
     class Meta:
         model = IndividInfo
