@@ -16,6 +16,8 @@ from sqlalchemy import (
     )
 
 from sqlalchemy.orm import relationship, backref
+
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
@@ -68,7 +70,7 @@ Base = declarative_base()
 #        self.title = title
 #        self.body = body
 
-class Individ_Info(Base):
+class IndividInfo(Base):
     __tablename__ = 'individ_info'
     
     # Changed application_id to id because it is too verbose and can be identified by its class when called
@@ -107,9 +109,17 @@ class Individ_Info(Base):
     military_last_location = Column(Text)
     military_branch = Column(Text)
     currently_active = Column(Integer)
-    # for association between tables
-    # Douglas, commented out while testing without 3NF
-    #children = relationship('individ_pg')
+
+    # for association between association table and post_grad
+    post_grads = association_proxy('individ_pgs', 'post_grad')
+
+    # for association between assoc table and pratice_loc
+    practice_locs = assocation_proxy('individ_practicelocs', 'practice_loc')
+
+    # for association between assoc table and hospital
+    hospitals = assocaition_proxy('individ_hosps', 'hospital')
+
+
 
     #@classmethod
     #def _get_keys(cls):
@@ -122,7 +132,7 @@ class Individ_Info(Base):
     #    return d
 
 
-class Education_Background(Base):
+class EducationBackground(Base):
     __tablename__ = 'education_background'
 
     # Douglas, added the id since edu_id is the FK. Changed edu_id to app_id since that is what it references
@@ -136,7 +146,7 @@ class Education_Background(Base):
     degree = Column(Text)
     attendance_dates = Column(Text)
 
-class Post_Grad(Base):
+class PostGrad(Base):
     __tablename__ = 'post_grad'
     
     # Douglas, changed post_grad_id to id because it will be recognized as post_grad.id when called
@@ -157,367 +167,394 @@ class Post_Grad(Base):
     post_grad_institution_director = Column(Text)
     post_grad_institution_current_director = Column(Text)
 
-#class Individ_PG(Base):
-#    __tablename__ = 'individ_pg'
-#
-#    ind_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    pg_id = Column(Integer, ForeignKey('post_grad.id'), primary_key=True)
-    # FOREIGN KEY (Ind_ID) REFERENCES Individ_Info(application_id)
-    # FOREIGN KEY (PG_ID) REFERENCES Post_Grad(post_grad_id)
+# Association table
+class IndividPostGrad(Base):
+    __tablename__ = 'individ_pg'
 
-#class License_Certificates:
-#    __tablename__ = 'license_certificates'
-#
-#    id = Column(Integer, primary_key=True)
-#    dea_number = Column(Text)
-#    dea_date_of_issue = Column(Text)
-#    dea_date_of_expiration = Column(Text)
-#    dps_number = Column(Text)
-#    dps_date_of_issue = Column(Text)
-#    dps_date_of_expiration = Column(Text)
-#    other_cds = Column(Text)
-#    other_cds_number = Column(Text)
-#    other_cds_registration = Column(Text)
-#    other_cds_date_of_issue = Column(Text)
-#    other_cds_date_of_expiration = Column(Text)
-#    other_cds_currently_practice = Column(Integer)
-#    upin = Column(Text)
-#    national_provider = Column(Text)
-#    medicare_provider = Column(Integer)
-#    medicare_provider_number = Column(Text)
-#    medicaid_provider = Column(Integer)
-#    medicaid_provider_number = Column(Text)
-#    ecfmg = Column(Integer)
-#    ecfmg_number = Column(Text)
-#    ecfmg_date_of_issue = Column(Text)
-#
-#class License_Types:
-#    __tablename__ = 'license_types'
-#
-#    id = Column(Integer, ForeignKey('license_certificates.id'), primary_key=True)
-#    license_type = Column(Text)
-#    license_number = Column(Text)
-#    license_registration = Column(Text)
-#    license_date_of_issue = Column(Text)
-#    license_date_of_expiration = Column(Text)
-#    license_currently_practice = Column(Integer)
-#    # FOREIGN KEY (lic_cert_id) REFERENCES License_Certificates(license_id)
-#
-#class Individ_License:
-#    __tablename__ = 'individ_license'
-#
-#    l_id = Column(Integer)
-#    i_id = Column(Integer)
-#    # FOREIGN KEY (L_ID) REFERENCES License_Certificates(license_id)
-#    # FOREIGN KEY (I_ID) REFERENCES Individ_Info(application_id)
-#
-#class Professional_Specialty_Info:
-#    __tablename__ = 'professional_specialty_info'
-#
-#    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    primary_specialty = Column(Integer)
-#    specialty = Column(Text)
-#    board_certified = Column(Integer)
-#    board_name = Column(Text)
-#    initial_certification_date = Column(Text)
-#    recertification_date = Column(Text)
-#    certification_expiration_date = Column(Text)
-#    board_certification_exam = Column(Integer)
-#    board_certification_board  = Column(Text)
-#    board_certification_part_II = Column(Integer)
-#    board_certification_exam_name = Column(Text)
-#    board_certification_sit = Column(Integer)
-#    board_certification_sit_date = Column(Text)
-#    board_certification_no_board = Column(Integer)
-#    directory_listed_hmo = Column(Integer)
-#    directory_listed_ppo = Column(Integer)
-#    directory_listed_pos = Column(Integer)
-#    other_areas_professional_practice = Column(Text)
-#
-#class Work_History:
-#    __tablename__ = 'work_history'
-#
-#    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    current_practice = Column(Integer)
-#    practice_name = Column(Text)
-#    start_date = Column(Text)
-#    end_date = Column(Text)
-#    practice_address = Column(Text)
-#    practice_city = Column(Text)
-#    practice_state_or_country = Column(Text)
-#    practice_postal_code = Column(Text)
-#    practice_reason_for_discontinuance = Column(Text)
-#
-#class Hospital:
-#    __tablename__ = 'hospital'
-#
-#    id = Column(Integer, primary_key=True)
-#    hospital_primary = Column(Integer)
-#    hospital_privileges = Column(Integer)
-#    admitting_arrangements = Column(Text)
-#    hospital = Column(Text)
-#    hospital_start_date = Column(Text)
-#    hospital_end_date = Column(Text)
-#    hospital_address = Column(Text)
-#    hospital_city = Column(Text)
-#    hospital_state_or_country = Column(Text)
-#    hospital_postal_code = Column(Text)
-#    hospital_phone = Column(Text)
-#    hospital_fax = Column(Text)
-#    hospital_email = Column(Text)
-#    hospital_unrestricted_privileges = Column(Integer)
-#    hospital_types_of_privileges = Column(Text)
-#    hospital_temporary_privileges = Column(Integer)
-#    hospital_admission_percentage = Column(Text)
-#    hospital_reason_for_leaving = Column(Text)
-#
-#class Individ_Hosp:
-#    # this is an associative table
-#    __tablename__ = 'individ_hosp'
-#
-#    H_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    I_id = Column(Integer, ForeignKey('hospital.id'), primary_key=True)
-#
-#class Professional_Liability_Insurance_Coverage:
-#    __tablename__ = 'professional_liability_insurance_coverage'
-#
-#    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    self_insured = Column(Integer)
-#    malpractice_insurance_name = Column(Text)
-#    malpractice_insurance_address = Column(Text)
-#    malpractice_insurance_city = Column(Text)
-#    malpractice_insurance_state_or_country = Column(Text)
-#    malpractice_insurance_postal_code = Column(Text)
-#    malpractice_insurance_phone = Column(Text)
-#    malpractice_insurance_policy_number = Column(Text)
-#    malpractice_insurance_effective_date = Column(Text)
-#    malpractice_insurance_expiration_date = Column(Text)
-#    malpractice_insurance_coverage_per_occurence = Column(Text)
-#    malpractice_insurance_coverage_aggregate = Column(Text)
-#    malpractice_insurance_coverage_type = Column(Integer)
-#    malpractice_insurance_time_with_carrier = Column(Text)
-#
-#class Call_Coverage:
-#    __tablename__ = 'call_coverage'
-#
-#    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    colleague_name = Column(Text)
-#    colleague_specialty = Column(Text)
-#    practice_partners_name = Column(Text)
-#
-#class Practice_Location_Info:
-#    __tablename__ = 'practice_location_info'
-#
-#    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    practice_location_name = Column(Text)
-#    service_type = Column(Integer)
-#    practice_name_in_directory = Column(Text)
-#    practice_name_in_w9 = Column(Text)
-#    practice_location_primary = Column(Integer)
-#    practice_address = Column(Text)
-#    practice_city = Column(Text)
-#    practice_state_or_country = Column(Text)
-#    practice_postal_code = Column(Text)
-#    practice_phone = Column(Text)
-#    practice_fax = Column(Text)
-#    practice_email = Column(Text)
-#    practice_backoffice_phone = Column(Text)
-#    practice_medicaid_number = Column(Text)
-#    practice_tax_id_number = Column(Text)
-#    practice_tax_number = Column(Text)
-#    practice_tax_name = Column(Text)
-#    currently_practicing = Column(Integer)
-#    practice_expected_state_date = Column(Text)
-#    practice_list_in_directory = Column(Integer)
-#    practice_manager = Column(Text)
-#    practice_manager_phone = Column(Text)
-#    practice_manager_fax = Column(Text)
-#    credentialing_contact = Column(Text)
-#    credentialing_contact_address = Column(Text)
-#    credentialing_contact_city = Column(Text)
-#    credentialing_contact_state_or_country = Column(Text)
-#    credentialing_contact_postal_code = Column(Text)
-#    billing_company_name = Column(Text)
-#    billing_company_representative = Column(Text)
-#    billing_representative_address = Column(Text)
-#    billing_representative_city = Column(Text)
-#    billing_representative_state_or_country = Column(Text)
-#    billing_representative_postal_code = Column(Text)
-#    billing_representative_phone = Column(Text)
-#    billing_representative_fax = Column(Text)
-#    billing_representative_email = Column(Text)
-#    billing_representative_dept_name = Column(Text)
-#    billing_representative_check_payable_to = Column(Text)
-#    billing_representative_electronic_bill = Column(Text)
-#    hours_seen_monday_available = Column(Integer)
-#    hours_seen_monday_morning = Column(Text)
-#    hours_seen_monday_afternoon = Column(Text)
-#    hours_seen_monday_evening = Column(Text)
-#    hours_seen_tuesday_available = Column(Integer)
-#    hours_seen_tuesday_morning = Column(Text)
-#    hours_seen_tuesday_afternoon = Column(Text)
-#    hours_seen_tuesday_evening = Column(Text)
-#    hours_seen_wednesday_available = Column(Integer)
-#    hours_seen_wednesday_morning = Column(Text)
-#    hours_seen_wednesday_afternoon = Column(Text)
-#    hours_seen_wednesday_evening = Column(Text)
-#    hours_seen_thursday_available = Column(Integer)
-#    hours_seen_thursday_morning = Column(Text)
-#    hours_seen_thursday_afternoon = Column(Text)
-#    hours_seen_thursday_evening = Column(Text)
-#    hours_seen_friday_available = Column(Integer)
-#    hours_seen_friday_morning = Column(Text)
-#    hours_seen_friday_afternoon = Column(Text)
-#    hours_seen_friday_evening = Column(Text)
-#    hours_seen_saturday_available = Column(Integer)
-#    hours_seen_saturday_morning = Column(Text)
-#    hours_seen_saturday_afternoon = Column(Text)
-#    hours_seen_saturday_evening = Column(Text)
-#    hours_seen_sunday_available = Column(Integer)
-#    hours_seen_sunday_morning = Column(Text)
-#    hours_seen_sunday_afternoon = Column(Text)
-#    hours_seen_sunday_evening = Column(Text)
-#    practice_24_7_phone_coverage = Column(Integer)
-#    practice_accepts = Column(Integer)
-#    new_patient_acceptance_variation = Column(Text)
-#    practice_limitations_gender = Column(Integer)
-#    practice_limitations_age = Column(Text)
-#    practice_limitations_other = Column(Text)
-#    other_care_providers = Column(Integer)
-#    other_care_providers_name_one = Column(Text)
-#    other_care_providers_professional_designation_one = Column(Text)
-#    other_care_providers_providers_state_one = Column(Text)
-#    other_care_providers_license_one = Column(Text)
-#    other_care_providers_name_two = Column(Text)
-#    other_care_providers_professional_designation_two = Column(Text)
-#    other_care_providers_state_two = Column(Text)
-#    other_care_providers_license_two = Column(Text)
-#    other_care_providers_name_three = Column(Text)
-#    other_care_providers_professional_designation_three = Column(Text)
-#    other_care_providers_state_three = Column(Text)
-#    other_care_providers_license_three = Column(Text)
-#    other_care_providers_name_four = Column(Text)
-#    other_care_providers_professional_designation_four = Column(Text)
-#    other_care_providers_providers_state_four = Column(Text)
-#    other_care_providers_license_four = Column(Text)
-#    other_care_providers_name_five = Column(Text)
-#    other_care_providers_professional_designation_five = Column(Text)
-#    other_care_providers_providers_state_five = Column(Text)
-#    other_care_providers_license_five = Column(Text)
-#    other_care_providers_name_six = Column(Text)
-#    other_care_providers_professional_designation_six = Column(Text)
-#    other_care_providers_providers_state_six = Column(Text)
-#    other_care_providers_license_six = Column(Text)
-#    health_care_provider_non_english_lang = Column(Text)
-#    office_personnel_non_english_lang = Column(Text)
-#    interpreter_available_bool = Column(Integer)
-#    interpreter_available_lang = Column(Text)
-#    practice_ada_accessibility = Column(Integer)
-#    handicap_accessible_facility = Column(Integer)
-#    handicap_accessible_facility_other = Column(Text)
-#    disable_services = Column(Integer)
-#    disable_services_other = Column(Text)
-#    practice_public_transportation = Column(Integer)
-#    practice_public_transportation_other = Column(Text)
-#    practice_childcare_services = Column(Integer)
-#    practice_minority_b_e = Column(Integer)
-#    basic_life_support_cert_staff = Column(Integer)
-#    basic_life_support_cert_exp_date = Column(Text)
-#    advanced_life_support_ob_staff = Column(Integer)
-#    advanced_life_support_ob_exp_date = Column(Text)
-#    advanced_trauma_support_staff = Column(Integer)
-#    advanced_trauma_support_exp_date = Column(Text)
-#    cardio_pulmonary_resucitation_staff = Column(Integer)
-#    cardio_pulmonary_resucitation_exp_date = Column(Text)
-#    adv_cardiac_life_support_staff = Column(Integer)
-#    adv_cardiac_life_support_exp_date = Column(Text)
-#    pediatric_adv_life_support_staff = Column(Integer)
-#    pediatric_adv_life_support_exp_date = Column(Text)
-#    neonatal_adv_life_support_staff = Column(Integer)
-#    neonatal_adv_life_support_exp_date = Column(Text)
-#    other_current_cert = Column(Text)
-#    other_current_cert_staff = Column(Integer)
-#    other_current_cert_exp_date = Column(Text)
-#    practice_service_on_site = Column(Integer)
-#    lab_services = Column(Integer)
-#    radiology_services = Column(Integer)
-#    allergy_injections = Column(Integer)
-#    age_appropriate_immunizations = Column(Integer)
-#    osteopathic_manipulation = Column(Integer)
-#    ekg = Column(Integer)
-#    allergy_skin_treatments = Column(Integer)
-#    flexible_sigmoidoscopy = Column(Integer)
-#    iv_hydration = Column(Integer)
-#    care_of_minor_lacerations = Column(Integer)
-#    routine_office_gynecology = Column(Integer)
-#    tympanometry_auiometry_test = Column(Integer)
-#    cardiac_stress_test = Column(Integer)
-#    pulmonary_function_test = Column(Integer)
-#    drawing_blood = Column(Integer)
-#    asthma_treatment = Column(Integer)
-#    physical_therapies = Column(Integer)
-#    other_services = Column(Integer)
-#    other_services_list = Column(Text)
-#    anasthesia_administered = Column(Integer)
-#    anasthesia_administered_categories = Column(Text)
-#    anasthesia_administrator = Column(Text)
-#
-#class Individ_Practice_Loc:
-#    __tablename__ = 'individ_practice_loc'
-#
-#    I_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    Lo_id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
-#
-#class Certs:
-#    __tablename__ = 'certs'
-#
-#    id = Column(Integer, ForeignKey('location.id'), primary_key=True)
-#    name = Column(Text)
-#    type = Column(Text)
-#
-#class Add_Office_Procedures:
-#    __tablename__ = 'add_office_procedures'
-#
-#    id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
-#    description = Column(Text)
-#
-#class Disclosure_Questions:
-#    __tablename__ = 'disclosure_questions'
-#    
-#    # Douglas, should id also be a primary key since it is a fk to individ_id?
-#    id = Column(Integer, ForeignKey('individ_info.id')
-#    question_number = Column(Integer, primary_key=True)
-#    question_answer = Column(Integer)
-#
-#class Disclosure_Questions_Explainations:
-#    __tablename__ = 'disclosure_questions_explainations'
-#    # Douglas, should I just name explaination_number to id to be consistent? Probably.
-#    explaination_number = Column(Integer, ForeignKey('disclosure_questions.question_number')
-#    question_explaination = Column(Text)
-#
-#class Malpractice_Claims:
-#    __tablename__ = 'malpractice_claims'
-#
-#    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-#    incident_date = Column(Text)
-#    date_filed = Column(Text)
-#    claim_status = Column(Text)
-#    carrier_involved = Column(Text)
-#    carrier_address = Column(Text)
-#    carrier_city = Column(Text)
-#    carrier_state_or_country = Column(Text)
-#    carrier_postal_code = Column(Text)
-#    carrier_phone = Column(Text)
-#    carrier_polity_number = Column(Text)
-#    settlement = Column(Text)
-#    paid = Column(Text)
-#    resolution = Column(Integer)
-#    description = Column(Text)
-#    defendant = Column(Text)
-#    co_defendant = Column(Integer)
-#    involvement = Column(Text)
-#    injury_to_patient = Column(Text)
-#    npdb = Column(Integer)
+    ind_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    pg_id = Column(Integer, ForeignKey('post_grad.id'), primary_key=True)
+
+    # bidirecitonal attribute/collection of individ_info/individ_pg
+    individ_info = relationship(Individ_Info,
+                        backref=backref("individ_pgs",
+                            cascade="all, delete-orphan")
+
+    # reference to Post_Grad object
+    post_grad = relationship("PostGrad")
+
+class LicenseCertificates:
+    __tablename__ = 'license_certificates'
+
+    id = Column(Integer, primary_key=True)
+    dea_number = Column(Text)
+    dea_date_of_issue = Column(Text)
+    dea_date_of_expiration = Column(Text)
+    dps_number = Column(Text)
+    dps_date_of_issue = Column(Text)
+    dps_date_of_expiration = Column(Text)
+    other_cds = Column(Text)
+    other_cds_number = Column(Text)
+    other_cds_registration = Column(Text)
+    other_cds_date_of_issue = Column(Text)
+    other_cds_date_of_expiration = Column(Text)
+    other_cds_currently_practice = Column(Integer)
+    upin = Column(Text)
+    national_provider = Column(Text)
+    medicare_provider = Column(Integer)
+    medicare_provider_number = Column(Text)
+    medicaid_provider = Column(Integer)
+    medicaid_provider_number = Column(Text)
+    ecfmg = Column(Integer)
+    ecfmg_number = Column(Text)
+    ecfmg_date_of_issue = Column(Text)
+
+class LicenseTypes:
+    __tablename__ = 'license_types'
+
+    id = Column(Integer, ForeignKey('license_certificates.id'), primary_key=True)
+    license_type = Column(Text)
+    license_number = Column(Text)
+    license_registration = Column(Text)
+    license_date_of_issue = Column(Text)
+    license_date_of_expiration = Column(Text)
+    license_currently_practice = Column(Integer)
+    # FOREIGN KEY (lic_cert_id) REFERENCES License_Certificates(license_id)
+
+# Association table
+class IndividLicense:
+    __tablename__ = 'individ_license'
+
+    l_id = Column(Integer, ForeignKey('license_certificates.id'), primary_key=True)
+    i_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    # FOREIGN KEY (L_ID) REFERENCES LicenseCertificates(license_id)
+    # FOREIGN KEY (I_ID) REFERENCES IndividInfo(application_id)
+
+class ProfessionalSpecialtyInfo:
+    __tablename__ = 'professional_specialty_info'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    primary_specialty = Column(Integer)
+    specialty = Column(Text)
+    board_certified = Column(Integer)
+    board_name = Column(Text)
+    initial_certification_date = Column(Text)
+    recertification_date = Column(Text)
+    certification_expiration_date = Column(Text)
+    board_certification_exam = Column(Integer)
+    board_certification_board  = Column(Text)
+    board_certification_part_II = Column(Integer)
+    board_certification_exam_name = Column(Text)
+    board_certification_sit = Column(Integer)
+    board_certification_sit_date = Column(Text)
+    board_certification_no_board = Column(Integer)
+    directory_listed_hmo = Column(Integer)
+    directory_listed_ppo = Column(Integer)
+    directory_listed_pos = Column(Integer)
+    other_areas_professional_practice = Column(Text)
+
+class WorkHistory:
+    __tablename__ = 'work_history'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    current_practice = Column(Integer)
+    practice_name = Column(Text)
+    start_date = Column(Text)
+    end_date = Column(Text)
+    practice_address = Column(Text)
+    practice_city = Column(Text)
+    practice_state_or_country = Column(Text)
+    practice_postal_code = Column(Text)
+    practice_reason_for_discontinuance = Column(Text)
+
+class Hospital:
+    __tablename__ = 'hospital'
+
+    id = Column(Integer, primary_key=True)
+    hospital_primary = Column(Integer)
+    hospital_privileges = Column(Integer)
+    admitting_arrangements = Column(Text)
+    hospital = Column(Text)
+    hospital_start_date = Column(Text)
+    hospital_end_date = Column(Text)
+    hospital_address = Column(Text)
+    hospital_city = Column(Text)
+    hospital_state_or_country = Column(Text)
+    hospital_postal_code = Column(Text)
+    hospital_phone = Column(Text)
+    hospital_fax = Column(Text)
+    hospital_email = Column(Text)
+    hospital_unrestricted_privileges = Column(Integer)
+    hospital_types_of_privileges = Column(Text)
+    hospital_temporary_privileges = Column(Integer)
+    hospital_admission_percentage = Column(Text)
+    hospital_reason_for_leaving = Column(Text)
+
+# Association table
+class IndividHosp:
+    __tablename__ = 'individ_hosp'
+
+    H_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    I_id = Column(Integer, ForeignKey('hospital.id'), primary_key=True)
+
+    # bidirectional attribute/collection of individ_info/individ_hosps
+    individ_info = relationship(IndividInfo,
+                        backref=backref("individ_hosps",
+                            cascade="all, delete-orphan")
+                        )
+
+    # reference to the Hospital object
+    hospital = relationship("Hospital")
+
+class ProfessionalLiabilityInsuranceCoverage:
+    __tablename__ = 'professional_liability_insurance_coverage'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    self_insured = Column(Integer)
+    malpractice_insurance_name = Column(Text)
+    malpractice_insurance_address = Column(Text)
+    malpractice_insurance_city = Column(Text)
+    malpractice_insurance_state_or_country = Column(Text)
+    malpractice_insurance_postal_code = Column(Text)
+    malpractice_insurance_phone = Column(Text)
+    malpractice_insurance_policy_number = Column(Text)
+    malpractice_insurance_effective_date = Column(Text)
+    malpractice_insurance_expiration_date = Column(Text)
+    malpractice_insurance_coverage_per_occurence = Column(Text)
+    malpractice_insurance_coverage_aggregate = Column(Text)
+    malpractice_insurance_coverage_type = Column(Integer)
+    malpractice_insurance_time_with_carrier = Column(Text)
+
+class CallCoverage:
+    __tablename__ = 'call_coverage'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    colleague_name = Column(Text)
+    colleague_specialty = Column(Text)
+    practice_partners_name = Column(Text)
+
+class PracticeLocationInfo:
+    __tablename__ = 'practice_location_info'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    practice_location_name = Column(Text)
+    service_type = Column(Integer)
+    practice_name_in_directory = Column(Text)
+    practice_name_in_w9 = Column(Text)
+    practice_location_primary = Column(Integer)
+    practice_address = Column(Text)
+    practice_city = Column(Text)
+    practice_state_or_country = Column(Text)
+    practice_postal_code = Column(Text)
+    practice_phone = Column(Text)
+    practice_fax = Column(Text)
+    practice_email = Column(Text)
+    practice_backoffice_phone = Column(Text)
+    practice_medicaid_number = Column(Text)
+    practice_tax_id_number = Column(Text)
+    practice_tax_number = Column(Text)
+    practice_tax_name = Column(Text)
+    currently_practicing = Column(Integer)
+    practice_expected_state_date = Column(Text)
+    practice_list_in_directory = Column(Integer)
+    practice_manager = Column(Text)
+    practice_manager_phone = Column(Text)
+    practice_manager_fax = Column(Text)
+    credentialing_contact = Column(Text)
+    credentialing_contact_address = Column(Text)
+    credentialing_contact_city = Column(Text)
+    credentialing_contact_state_or_country = Column(Text)
+    credentialing_contact_postal_code = Column(Text)
+    billing_company_name = Column(Text)
+    billing_company_representative = Column(Text)
+    billing_representative_address = Column(Text)
+    billing_representative_city = Column(Text)
+    billing_representative_state_or_country = Column(Text)
+    billing_representative_postal_code = Column(Text)
+    billing_representative_phone = Column(Text)
+    billing_representative_fax = Column(Text)
+    billing_representative_email = Column(Text)
+    billing_representative_dept_name = Column(Text)
+    billing_representative_check_payable_to = Column(Text)
+    billing_representative_electronic_bill = Column(Text)
+    hours_seen_monday_available = Column(Integer)
+    hours_seen_monday_morning = Column(Text)
+    hours_seen_monday_afternoon = Column(Text)
+    hours_seen_monday_evening = Column(Text)
+    hours_seen_tuesday_available = Column(Integer)
+    hours_seen_tuesday_morning = Column(Text)
+    hours_seen_tuesday_afternoon = Column(Text)
+    hours_seen_tuesday_evening = Column(Text)
+    hours_seen_wednesday_available = Column(Integer)
+    hours_seen_wednesday_morning = Column(Text)
+    hours_seen_wednesday_afternoon = Column(Text)
+    hours_seen_wednesday_evening = Column(Text)
+    hours_seen_thursday_available = Column(Integer)
+    hours_seen_thursday_morning = Column(Text)
+    hours_seen_thursday_afternoon = Column(Text)
+    hours_seen_thursday_evening = Column(Text)
+    hours_seen_friday_available = Column(Integer)
+    hours_seen_friday_morning = Column(Text)
+    hours_seen_friday_afternoon = Column(Text)
+    hours_seen_friday_evening = Column(Text)
+    hours_seen_saturday_available = Column(Integer)
+    hours_seen_saturday_morning = Column(Text)
+    hours_seen_saturday_afternoon = Column(Text)
+    hours_seen_saturday_evening = Column(Text)
+    hours_seen_sunday_available = Column(Integer)
+    hours_seen_sunday_morning = Column(Text)
+    hours_seen_sunday_afternoon = Column(Text)
+    hours_seen_sunday_evening = Column(Text)
+    practice_24_7_phone_coverage = Column(Integer)
+    practice_accepts = Column(Integer)
+    new_patient_acceptance_variation = Column(Text)
+    practice_limitations_gender = Column(Integer)
+    practice_limitations_age = Column(Text)
+    practice_limitations_other = Column(Text)
+    other_care_providers = Column(Integer)
+    other_care_providers_name_one = Column(Text)
+    other_care_providers_professional_designation_one = Column(Text)
+    other_care_providers_providers_state_one = Column(Text)
+    other_care_providers_license_one = Column(Text)
+    other_care_providers_name_two = Column(Text)
+    other_care_providers_professional_designation_two = Column(Text)
+    other_care_providers_state_two = Column(Text)
+    other_care_providers_license_two = Column(Text)
+    other_care_providers_name_three = Column(Text)
+    other_care_providers_professional_designation_three = Column(Text)
+    other_care_providers_state_three = Column(Text)
+    other_care_providers_license_three = Column(Text)
+    other_care_providers_name_four = Column(Text)
+    other_care_providers_professional_designation_four = Column(Text)
+    other_care_providers_providers_state_four = Column(Text)
+    other_care_providers_license_four = Column(Text)
+    other_care_providers_name_five = Column(Text)
+    other_care_providers_professional_designation_five = Column(Text)
+    other_care_providers_providers_state_five = Column(Text)
+    other_care_providers_license_five = Column(Text)
+    other_care_providers_name_six = Column(Text)
+    other_care_providers_professional_designation_six = Column(Text)
+    other_care_providers_providers_state_six = Column(Text)
+    other_care_providers_license_six = Column(Text)
+    health_care_provider_non_english_lang = Column(Text)
+    office_personnel_non_english_lang = Column(Text)
+    interpreter_available_bool = Column(Integer)
+    interpreter_available_lang = Column(Text)
+    practice_ada_accessibility = Column(Integer)
+    handicap_accessible_facility = Column(Integer)
+    handicap_accessible_facility_other = Column(Text)
+    disable_services = Column(Integer)
+    disable_services_other = Column(Text)
+    practice_public_transportation = Column(Integer)
+    practice_public_transportation_other = Column(Text)
+    practice_childcare_services = Column(Integer)
+    practice_minority_b_e = Column(Integer)
+    basic_life_support_cert_staff = Column(Integer)
+    basic_life_support_cert_exp_date = Column(Text)
+    advanced_life_support_ob_staff = Column(Integer)
+    advanced_life_support_ob_exp_date = Column(Text)
+    advanced_trauma_support_staff = Column(Integer)
+    advanced_trauma_support_exp_date = Column(Text)
+    cardio_pulmonary_resucitation_staff = Column(Integer)
+    cardio_pulmonary_resucitation_exp_date = Column(Text)
+    adv_cardiac_life_support_staff = Column(Integer)
+    adv_cardiac_life_support_exp_date = Column(Text)
+    pediatric_adv_life_support_staff = Column(Integer)
+    pediatric_adv_life_support_exp_date = Column(Text)
+    neonatal_adv_life_support_staff = Column(Integer)
+    neonatal_adv_life_support_exp_date = Column(Text)
+    other_current_cert = Column(Text)
+    other_current_cert_staff = Column(Integer)
+    other_current_cert_exp_date = Column(Text)
+    practice_service_on_site = Column(Integer)
+    lab_services = Column(Integer)
+    radiology_services = Column(Integer)
+    allergy_injections = Column(Integer)
+    age_appropriate_immunizations = Column(Integer)
+    osteopathic_manipulation = Column(Integer)
+    ekg = Column(Integer)
+    allergy_skin_treatments = Column(Integer)
+    flexible_sigmoidoscopy = Column(Integer)
+    iv_hydration = Column(Integer)
+    care_of_minor_lacerations = Column(Integer)
+    routine_office_gynecology = Column(Integer)
+    tympanometry_auiometry_test = Column(Integer)
+    cardiac_stress_test = Column(Integer)
+    pulmonary_function_test = Column(Integer)
+    drawing_blood = Column(Integer)
+    asthma_treatment = Column(Integer)
+    physical_therapies = Column(Integer)
+    other_services = Column(Integer)
+    other_services_list = Column(Text)
+    anasthesia_administered = Column(Integer)
+    anasthesia_administered_categories = Column(Text)
+    anasthesia_administrator = Column(Text)
+
+# Association table
+class IndividPracticeLoc:
+    __tablename__ = 'individ_practice_loc'
+
+    I_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    Lo_id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
+
+    # bidirecitonal attribute/collection of individ_info/individ_practicelocs
+    individ_info = relationship(IndividInfo,
+                        backref=backref("individ_practicelocs",
+                            cascade="all, delete-orphan")
+                        )
+
+    # reference to the PracticeLoc object
+    practice_loc = relationship("PracticeLoc")
+
+class Certs:
+    __tablename__ = 'certs'
+
+    id = Column(Integer, ForeignKey('location.id'), primary_key=True)
+    name = Column(Text)
+    type = Column(Text)
+
+class AddOfficeProcedures:
+    __tablename__ = 'add_office_procedures'
+
+    id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
+    description = Column(Text)
+
+class DisclosureQuestions:
+    __tablename__ = 'disclosure_questions'
+    
+    # Douglas, should id also be a primary key since it is a fk to individ_id?
+    id = Column(Integer, ForeignKey('individ_info.id')
+    question_number = Column(Integer, primary_key=True)
+    question_answer = Column(Integer)
+
+class DisclosureQuestionsExplainations:
+    __tablename__ = 'disclosure_questions_explainations'
+    # Douglas, should I just name explaination_number to id to be consistent? Probably.
+    explaination_number = Column(Integer, ForeignKey('disclosure_questions.question_number', primary_key=True))
+    question_explaination = Column(Text)
+
+class MalpracticeClaims:
+    __tablename__ = 'malpractice_claims'
+
+    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    incident_date = Column(Text)
+    date_filed = Column(Text)
+    claim_status = Column(Text)
+    carrier_involved = Column(Text)
+    carrier_address = Column(Text)
+    carrier_city = Column(Text)
+    carrier_state_or_country = Column(Text)
+    carrier_postal_code = Column(Text)
+    carrier_phone = Column(Text)
+    carrier_polity_number = Column(Text)
+    settlement = Column(Text)
+    paid = Column(Text)
+    resolution = Column(Integer)
+    description = Column(Text)
+    defendant = Column(Text)
+    co_defendant = Column(Integer)
+    involvement = Column(Text)
+    injury_to_patient = Column(Text)
+    npdb = Column(Integer)
 
 class Root(object):
     # Douglas, ... (Allow, 'group:editors', 'edit')]
