@@ -99,7 +99,7 @@ class ClientViews(object):
     def __init__(self, request):
         self.request = request
         self.renderer = get_renderer("templates/layout.jinja2")
-        self.id = ''
+        #self.uid = ''
         self.full_name = ''
         #self.layout = renderer.implementation().macros['layout']
         #self.logged_in = authenticated_userid(request)
@@ -175,7 +175,7 @@ class ClientViews(object):
     def clientpage_view(self):
 
         # Retrieving the uid (aka IndividInfo.id) as selected by the link from the previous page
-        uid = self.request.matchdict['uid']
+        id = self.request.matchdict['uid']
         # Get the selected navigation view (ex. Individual Information, Education, etc.)
         loc = self.request.matchdict['loc']
 
@@ -266,7 +266,7 @@ class ClientViews(object):
         if self.request.method == 'POST' and form.validate():
             form.populate_obj(client)
         # Douglas, added form=form since wtforms-alchemy generates the page in a less error prone way
-        return dict(client=client,form=form, title=self.full_name, loc=loc)
+        return dict(client=client,form=form, title=self.full_name, uid=id, loc=loc)
     
     # Douglas, this should be an existing application page
     # Douglas, removed permission='edit'
@@ -278,7 +278,7 @@ class ClientViews(object):
         #title = 'Edit ' + page.title
         
         # Get the user id of the practitioner, the section to edit, and query for data pertaining to the user
-        uid = self.request.matchdict['uid']
+        id = self.request.matchdict['uid']
         loc = self.request.matchdict['loc']
 
         # Query with first() as not to return an error if information is missing
@@ -329,11 +329,11 @@ class ClientViews(object):
             #redirect('clientpage_edit')
             
             # Douglas, not sure about this url response with a render_reponse
-            url = self.request.route_url('clientpage_view', uid=uid)
+            url = self.request.route_url('clientpage_view', uid=id)
             return HTTPFound(url)
 
         
-        return dict(client=client, form=form)
+        return dict(client=client, form=form, uid=id)
             
         
         # Douglas, old Colander/Deform forms
