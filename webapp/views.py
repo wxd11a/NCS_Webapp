@@ -18,8 +18,35 @@ from sqlalchemy.exc import DBAPIError
 #    )
 
 # Douglas, removed Page
-from .models import DBSession, Individ_Info
-from .forms import Individ_Info_Form, Individ_Info_UpdateForm
+from .models import (
+        DBSession,
+        IndividInfo,
+        EducationBackground,
+        PostGrad,
+        IndividPostGrad,
+        LicenseCertificates,
+        LicenseTypes,
+        IndividLicense,
+        ProfessionalSpecialtyInfo,
+        WorkHistory,
+        Hospital,
+        IndividHosp,
+        ProfessionalLiabilityInsuranceCoverage,
+        CallCoverage,
+        PracticeLocationInfo,
+        IndividPracticeLoc,
+        Certs,
+        AddOfficeProcedures,
+        DisclosureQuestions,
+        DisclosureQuestionsExplanations,
+        MalpracticeClaims
+        )
+
+from .forms import (
+        IndividInfoForm,
+        IndividInfoUpdateForm
+        )
+
 from .security import USERS
 
 

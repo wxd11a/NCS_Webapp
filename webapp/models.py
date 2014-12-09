@@ -178,6 +178,7 @@ class IndividPostGrad(Base):
     individ_info = relationship(Individ_Info,
                         backref=backref("individ_pgs",
                             cascade="all, delete-orphan")
+                        )
 
     # reference to Post_Grad object
     post_grad = relationship("PostGrad")
