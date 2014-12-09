@@ -1,10 +1,12 @@
 {% extends 'layout.jinja2' %}
 {% block content %}
 		<a href="{{ request.route_url('clientpage_edit', uid=client.id, loc=loc) }}">Edit</a>
-		<div id="flex-container_row">
-			<div class="col1">	<ul>
+		<div id="flexcontainer_row">
+			<div class="col1">
+				<ul>	
+					{# Format with "|replace("_", "") and |capitalize #}
 					{% for ckey in client.__mapper__.columns.keys() %}
-					<li class='cattr'>{{ckey}}: {{ client[ckey] }}</li>
+					<li class='cattr'>{{ckey|replace("_", " ")|capitalize}}: {{ client[ckey]|capitalize }}</li>
 					{% endfor %}
 				</ul> </div>
 	

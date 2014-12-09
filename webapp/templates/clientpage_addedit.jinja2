@@ -6,7 +6,7 @@
 	<ul>
 	{# Format with "|replace("_", "") and |capitalize #}
 	{% for field in form %}
-		<li><label>{{ field.label }}</label>: {{ field }} </li>
+		<li>{{ field.label }}: {{ field }}</li>
 	{% endfor %}
 	
 	{# Still need a submit button #}
