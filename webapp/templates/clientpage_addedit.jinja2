@@ -1,13 +1,16 @@
 {% extends 'layout.jinja2' %}
 
 {% block content %}
+<div id="appnav">
 <form action="{{ request.path }}" method="POST">
 	<ul>
+	{# Format with "|replace("_", "") and |capitalize #}
 	{% for field in form %}
-	<li> {{ field }} </li>
+		<li><label>{{ field.label }}</label>: {{ field }} </li>
 	{% endfor %}
 	
 	{# Still need a submit button #}
 </form>	
+</div>
 {% endblock %}
 

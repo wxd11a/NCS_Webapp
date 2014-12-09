@@ -148,7 +148,7 @@ class ClientViews(object):
         loc = self.request.matchdict['loc']
 
 	# Individual's Information
-	# Education
+	# Education Background
 	# Professional Information
 	# Work History
 	# Hospital Affiliations
@@ -161,28 +161,29 @@ class ClientViews(object):
 
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
         client = DBSession.query(IndividInfo).filter_by(id=id).one()
-        #if loc == 'individual':
-            #client = DBSession.query(IndividInfo).filter_by(id=id).one()
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-        #    #
-        #elif loc == 'education':
-            #
+        if loc == 'individual':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'education':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'professional':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'history':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'affiliations':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'references':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'insurancecoverage':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'callcoverage':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'location':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'disclosure':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        elif loc == 'standards':
+            client = DBSession.query(IndividInfo).filter_by(id=id).one()
+
         # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
         full_name = "{}, {}".format(client.last_name, client.first_name)
 

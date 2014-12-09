@@ -1,13 +1,14 @@
 {% extends 'layout.jinja2' %}	
 {% block content %}
 		<div id=main>
+		<div id="appnav">
 			<ul>
 				{# iterate through all of the clients with links to their pages #}
 				{% for client in clients %}
 				<li class='clients-list'><a href="{{request.route_url('clientpage_view', uid=client.id, loc='individual')}}">
 					{{client.last_name}}</a></li>
 				{% endfor %}
-			</ul>
+			</ul></div>
 			<!--<div id="appnav">
 				<ul>
 					<li><a id="individualInformation">Individual's Information</a></li>
