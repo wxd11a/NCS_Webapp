@@ -70,6 +70,7 @@ Base = declarative_base()
 #        self.title = title
 #        self.body = body
 
+# Douglas, can use info={'label': 'Name'} if wtforms keeps escaping jinja filters
 class IndividInfo(Base):
     __tablename__ = 'individ_info'
     
@@ -113,8 +114,11 @@ class IndividInfo(Base):
     # for association between association table and post_grad
     post_grads = association_proxy('individ_pgs', 'post_grad')
 
+    # for association between assoc table and license_certificate
+    license_certificates = association_proxy('individ_licenses', 'license_certificate')
+
     # for association between assoc table and pratice_loc
-    practice_locs = association_proxy('individ_practicelocs', 'practice_loc')
+    practice_locs = association_proxy('individ_practice_locs', 'practice_loc')
 
     # for association between assoc table and hospital
     hospitals = association_proxy('individ_hosps', 'hospital')
@@ -183,8 +187,8 @@ class IndividPostGrad(Base):
     # reference to Post_Grad object
     post_grad = relationship("PostGrad")
 
-class LicenseCertificates:
-    __tablename__ = 'license_certificates'
+class LicenseCertificate(Base):
+    __tablename__ = 'license_certificate'
 
     id = Column(Integer, primary_key=True)
     dea_number = Column(Text)
@@ -209,10 +213,10 @@ class LicenseCertificates:
     ecfmg_number = Column(Text)
     ecfmg_date_of_issue = Column(Text)
 
-class LicenseTypes:
+class LicenseTypes(Base):
     __tablename__ = 'license_types'
 
-    id = Column(Integer, ForeignKey('license_certificates.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('license_certificate.id'), primary_key=True)
     license_type = Column(Text)
     license_number = Column(Text)
     license_registration = Column(Text)
@@ -222,15 +226,24 @@ class LicenseTypes:
     # FOREIGN KEY (lic_cert_id) REFERENCES License_Certificates(license_id)
 
 # Association table
-class IndividLicense:
+class IndividLicense(Base):
     __tablename__ = 'individ_license'
 
-    l_id = Column(Integer, ForeignKey('license_certificates.id'), primary_key=True)
+    l_id = Column(Integer, ForeignKey('license_certificate.id'), primary_key=True)
     i_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
     # FOREIGN KEY (L_ID) REFERENCES LicenseCertificates(license_id)
     # FOREIGN KEY (I_ID) REFERENCES IndividInfo(application_id)
 
-class ProfessionalSpecialtyInfo:
+    # bidirecitonal attribute/collection of individ_info/individ_licenses
+    individ_info = relationship(IndividInfo,
+                        backref=backref("individ_licenses",
+                            cascade="all, delete-orphan")
+                            )
+
+    # reference to LicenseCertificate object
+    license_certificate = relationship("LicenseCertificate")
+
+class ProfessionalSpecialtyInfo(Base):
     __tablename__ = 'professional_specialty_info'
 
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
@@ -253,7 +266,7 @@ class ProfessionalSpecialtyInfo:
     directory_listed_pos = Column(Integer)
     other_areas_professional_practice = Column(Text)
 
-class WorkHistory:
+class WorkHistory(Base):
     __tablename__ = 'work_history'
 
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
@@ -267,7 +280,7 @@ class WorkHistory:
     practice_postal_code = Column(Text)
     practice_reason_for_discontinuance = Column(Text)
 
-class Hospital:
+class Hospital(Base):
     __tablename__ = 'hospital'
 
     id = Column(Integer, primary_key=True)
@@ -291,7 +304,7 @@ class Hospital:
     hospital_reason_for_leaving = Column(Text)
 
 # Association table
-class IndividHosp:
+class IndividHosp(Base):
     __tablename__ = 'individ_hosp'
 
     H_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
@@ -306,7 +319,7 @@ class IndividHosp:
     # reference to the Hospital object
     hospital = relationship("Hospital")
 
-class ProfessionalLiabilityInsuranceCoverage:
+class ProfessionalLiabilityInsuranceCoverage(Base):
     __tablename__ = 'professional_liability_insurance_coverage'
 
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
@@ -325,7 +338,7 @@ class ProfessionalLiabilityInsuranceCoverage:
     malpractice_insurance_coverage_type = Column(Integer)
     malpractice_insurance_time_with_carrier = Column(Text)
 
-class CallCoverage:
+class CallCoverage(Base):
     __tablename__ = 'call_coverage'
 
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
@@ -333,7 +346,7 @@ class CallCoverage:
     colleague_specialty = Column(Text)
     practice_partners_name = Column(Text)
 
-class PracticeLocationInfo:
+class PracticeLocationInfo(Base):
     __tablename__ = 'practice_location_info'
 
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
@@ -491,7 +504,7 @@ class PracticeLocationInfo:
     anasthesia_administrator = Column(Text)
 
 # Association table
-class IndividPracticeLoc:
+class IndividPracticeLoc(Base):
     __tablename__ = 'individ_practice_loc'
 
     I_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
@@ -499,27 +512,27 @@ class IndividPracticeLoc:
 
     # bidirecitonal attribute/collection of individ_info/individ_practicelocs
     individ_info = relationship(IndividInfo,
-                        backref=backref("individ_practicelocs",
+                        backref=backref("individ_practice_locs",
                             cascade="all, delete-orphan")
                         )
 
     # reference to the PracticeLoc object
-    practice_loc = relationship("PracticeLoc")
+    practice_loc = relationship("PracticeLocationInfo")
 
-class Certs:
+class Certs(Base):
     __tablename__ = 'certs'
 
-    id = Column(Integer, ForeignKey('location.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
     name = Column(Text)
     type = Column(Text)
 
-class AddOfficeProcedures:
+class AddOfficeProcedures(Base):
     __tablename__ = 'add_office_procedures'
 
     id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
     description = Column(Text)
 
-class DisclosureQuestions:
+class DisclosureQuestions(Base):
     __tablename__ = 'disclosure_questions'
     
     # Douglas, should id also be a primary key since it is a fk to individ_id?
@@ -527,13 +540,13 @@ class DisclosureQuestions:
     question_number = Column(Integer, primary_key=True)
     question_answer = Column(Integer)
 
-class DisclosureQuestionsExplainations:
+class DisclosureQuestionsExplainations(Base):
     __tablename__ = 'disclosure_questions_explainations'
     # Douglas, should I just name explaination_number to id to be consistent? Probably.
-    explaination_number = Column(Integer, ForeignKey('disclosure_questions.question_number', primary_key=True))
+    id = Column(Integer, ForeignKey('disclosure_questions.question_number'), primary_key=True)
     question_explaination = Column(Text)
 
-class MalpracticeClaims:
+class MalpracticeClaims(Base):
     __tablename__ = 'malpractice_claims'
 
     id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)

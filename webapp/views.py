@@ -24,7 +24,7 @@ from .models import (
         EducationBackground,
         PostGrad,
         IndividPostGrad,
-        LicenseCertificates,
+        LicenseCertificate,
         LicenseTypes,
         IndividLicense,
         ProfessionalSpecialtyInfo,
@@ -43,9 +43,24 @@ from .models import (
         )
 
 from .forms import (
-        IndividInfoForm,
-        IndividInfoUpdateForm
-        )
+    IndividInfoForm,
+    IndividInfoUpdateForm,
+    EducationBackgroundForm,
+    PostGradForm,
+    LicenseCertificateForm,
+    LicenseTypesForm,
+    ProfessionalSpecialtyInfoForm,
+    WorkHistoryForm,
+    HospitalForm,
+    ProfessionalLiabilityInsuranceCoverageForm,
+    CallCoverageForm,
+    PracticeLocationInfoForm,
+    CertsForm,
+    AddOfficeProceduresForm,
+    DisclosureQuestionsForm,
+    DisclosureQuestionsExplainationsForm,
+    MalpracticeClaimsForm
+    )
 
 from .security import USERS
 
@@ -160,7 +175,7 @@ class ClientViews(object):
 	# Standard Authorization, Attestation, and Release
 
         # Match the query with the location. Using if/elif is ugly as hell. Find a better way -  Dicitonary perhaps?
-        client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        #client = DBSession.query(IndividInfo).filter_by(id=id).one()
         if loc == 'individual':
             client = DBSession.query(IndividInfo).filter_by(id=id).one()
         elif loc == 'education':

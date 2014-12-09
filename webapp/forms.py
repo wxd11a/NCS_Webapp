@@ -1,11 +1,12 @@
-from wtforms_alchemy import ModelForm
+from wtforms_alchemy import ModelForm#, ModelFieldList
+from wtforms.fields import FormField
 from wtforms_components import DateField
 from .models import (
         IndividInfo,
         EducationBackground,
         PostGrad,
         IndividPostGrad,
-        LicenseCertificates,
+        LicenseCertificate,
         LicenseTypes,
         IndividLicense,
         ProfessionalSpecialtyInfo,
@@ -45,4 +46,60 @@ class IndividInfoUpdateForm(IndividInfoForm):
 class EducationBackgroundForm(ModelForm):
     class Meta:
         model = EducationBackground
+
+class PostGradForm(ModelForm):
+    class Meta:
+        model = PostGrad
+
+class LicenseCertificateForm(ModelForm):
+    class Meta:
+        model = LicenseCertificate
+
+class LicenseTypesForm(ModelForm):
+    class Meta:
+        model = LicenseTypes
+
+class ProfessionalSpecialtyInfoForm(ModelForm):
+    class Meta:
+        model = ProfessionalSpecialtyInfo
+
+class WorkHistoryForm(ModelForm):
+    class Meta:
+        model = WorkHistory
+
+class HospitalForm(ModelForm):
+    class Meta:
+        model = Hospital
+
+class ProfessionalLiabilityInsuranceCoverageForm(ModelForm):
+    class Meta:
+        model = ProfessionalLiabilityInsuranceCoverage
+
+class CallCoverageForm(ModelForm):
+    class Meta:
+        model = CallCoverage
+
+class PracticeLocationInfoForm(ModelForm):
+    class Meta:
+        model = PracticeLocationInfo
+
+class CertsForm(ModelForm):
+    class Meta:
+        model = Certs
+
+class AddOfficeProceduresForm(ModelForm):
+    class Meta:
+        model = AddOfficeProcedures
+
+class DisclosureQuestionsForm(ModelForm):
+    class Meta:
+        model = DisclosureQuestions
+
+class DisclosureQuestionsExplainationsForm(ModelForm):
+    class Meta:
+        model = DisclosureQuestionsExplainations
+
+class MalpracticeClaimsForm(ModelForm):
+    class Meta:
+        model = MalpracticeClaims
 

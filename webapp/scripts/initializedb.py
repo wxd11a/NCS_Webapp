@@ -18,7 +18,7 @@ from ..models import (
         EducationBackground,
         PostGrad,
         IndividPostGrad,
-        LicenseCertificates,
+        LicenseCertificate,
         LicenseTypes,
         IndividLicense,
         ProfessionalSpecialtyInfo,
@@ -40,7 +40,21 @@ from ..models import (
 from ..forms import (
     IndividInfoForm,
     IndividInfoUpdateForm,
-    EducationBackgroundForm
+    EducationBackgroundForm,
+    PostGradForm,
+    LicenseCertificateForm,
+    LicenseTypesForm,
+    ProfessionalSpecialtyInfoForm,
+    WorkHistoryForm,
+    HospitalForm,
+    ProfessionalLiabilityInsuranceCoverageForm,
+    CallCoverageForm,
+    PracticeLocationInfoForm,
+    CertsForm,
+    AddOfficeProceduresForm,
+    DisclosureQuestionsForm,
+    DisclosureQuestionsExplainationsForm,
+    MalpracticeClaimsForm
     )
 
 
