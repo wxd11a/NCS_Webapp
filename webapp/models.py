@@ -18,8 +18,9 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship, backref
 
 from sqlalchemy.ext.associationproxy import association_proxy
-from sqlalchemy.ext.automap import automap_base
-#from sqlalchemy.ext.declarative import declarative_base
+# auto_map base is in SQLAlchemy 1.0
+#from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
     scoped_session,
@@ -35,9 +36,9 @@ from zope.sqlalchemy import ZopeTransactionExtension
 # It will also open and close database connections for us transparently when needed.
 # http://pyramid-blogr.readthedocs.org/en/latest/basic_models.html
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-#Base = declarative_base()
+Base = declarative_base()
 # Douglas, trying out AutomapBase which actually includes the declarative_base()
-Base = automap_base()
+#Base = automap_base()
 
 # Douglas, lookup cryptacular for strong one-way encryption for hashed passwords.
 # Douglas, do I want users within .models or .security?

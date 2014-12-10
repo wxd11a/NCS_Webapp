@@ -57,7 +57,7 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri, options=options)
     engine = engine_from_config(settings, 'sqlalchemy.')
     # .prepare is used for auto_map
-    Base.prepare(engine, reflect=True)
+    #Base.prepare(engine, reflect=True)
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
@@ -66,5 +66,7 @@ def main(argv=sys.argv):
         # Douglas, change model = ... to suit the new DB. Possibly with a users table for authentication.
         #model = Page(title='Root', body='<p>Root</p>')
         model = IndividInfo(id=int(1), last_name='Cassingham', first_name='Scott', type_professional='anethesiologist')
+        # Remember to insert a primary key for all the tables or an AttributeError will occur
         DBSession.add(model)
+        #transaction.manager.commit()
 

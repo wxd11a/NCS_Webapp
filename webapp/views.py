@@ -1,5 +1,4 @@
-#import colander
-#import deform.widget
+import transaction
 
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPFound
@@ -10,12 +9,6 @@ from pyramid.view import view_config, forbidden_view_config
 
 from sqlalchemy import inspect
 from sqlalchemy.exc import DBAPIError
-
-#from .models import (
-#    DBSession,
-#    MyModel,
-#    pages,
-#    )
 
 # Douglas, removed Page
 from .models import (
@@ -34,7 +27,7 @@ from .models import (
         ProfessionalLiabilityInsuranceCoverage,
         CallCoverage,
         PracticeLocationInfo,
-        IndividPracticeLoc,
+        IndividPracticeLocationInfo,
         Certs,
         AddOfficeProcedures,
         DisclosureQuestions,
@@ -195,87 +188,90 @@ class ClientViews(object):
         #client = DBSession.query(IndividInfo).filter_by(id=id).one()
 
         # Query with first() as not to return an error if information is missing
-        if loc == 'individual':
-            client = DBSession.query(IndividInfo).filter_by(id=id).first()
-            full_name = "{}, {}".format(client.last_name, client.first_name)
-            self.full_name = full_name
-            form = IndividInfoUpdateForm(self.request.POST)
-        elif loc == 'education':
-            client = DBSession.query(EducationBackground).filter_by(id=id).first()
-            form = EducationBackgroundUpdateForm(self.request.POST)
-        elif loc == 'professional':
-            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
-            form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST)
-        elif loc == 'history':
-            client = DBSession.query(WorkHistory).filter_by(id=id).first()
-            form = WorkHistoryUpdateForm(self.request.POST)
-        elif loc == 'affiliations':
-            client = DBSession.query(Hospital).filter_by(id=id).first()
-            form = HospitalUpdateForm(self.request.POST)
-        elif loc == 'references':
-            client = DBSession.query(IndividInfo).filter_by(id=id).first()
-            form = IndividInfoUpdateForm(self.request.POST)
-        elif loc == 'insurancecoverage':
-            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
-            form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST)
-        elif loc == 'callcoverage':
-            client = DBSession.query(CallCoverage).filter_by(id=id).first()
-            form = CallCoverageUpdateForm(self.request.POST)
-        elif loc == 'location':
-            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
-            form = PracticeLocationInfoUpdateForm(self.request.POST)
-        elif loc == 'disclosure':
-            client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
-            form = DisclosureQuestionsUpdateForm(self.request.POST)
-        elif loc == 'standards':
-            client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
-            form = MalpracticeClaimsUpdateForm(self.request.POST)
         #if loc == 'individual':
-        #    client = DBSession.query(IndividInfo).filter_by(id=id).one()
-        #    # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
+        #    client = DBSession.query(IndividInfo).filter_by(id=id).first()
         #    full_name = "{}, {}".format(client.last_name, client.first_name)
         #    self.full_name = full_name
+        #    form = IndividInfoUpdateForm(self.request.POST)
         #elif loc == 'education':
         #    client = DBSession.query(EducationBackground).filter_by(id=id).first()
+        #    form = EducationBackgroundUpdateForm(self.request.POST)
         #elif loc == 'professional':
-        #    client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).one()
+        #    client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
+        #    form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST)
         #elif loc == 'history':
-        #    client = DBSession.query(WorkHistory).filter_by(id=id).one()
+        #    client = DBSession.query(WorkHistory).filter_by(id=id).first()
+        #    form = WorkHistoryUpdateForm(self.request.POST)
         #elif loc == 'affiliations':
-        #    client = DBSession.query(Hospital).filter_by(id=id).one()
+        #    client = DBSession.query(Hospital).filter_by(id=id).first()
+        #    form = HospitalUpdateForm(self.request.POST)
         #elif loc == 'references':
-        #    client = DBSession.query(IndividInfo).filter_by(id=id).one()
+        #    client = DBSession.query(IndividInfo).filter_by(id=id).first()
+        #    form = IndividInfoUpdateForm(self.request.POST)
         #elif loc == 'insurancecoverage':
-        #    client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).one()
+        #    client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
+        #    form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST)
         #elif loc == 'callcoverage':
-        #    client = DBSession.query(CallCoverage).filter_by(id=id).one()
+        #    client = DBSession.query(CallCoverage).filter_by(id=id).first()
+        #    form = CallCoverageUpdateForm(self.request.POST)
         #elif loc == 'location':
-        #    client = DBSession.query(PracticeLocationInfo).filter_by(id=id).one()
+        #    client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
+        #    form = PracticeLocationInfoUpdateForm(self.request.POST)
         #elif loc == 'disclosure':
-        #    client = DBSession.query(DisclosureQuestions).filter_by(id=id).one()
+        #    client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
+        #    form = DisclosureQuestionsUpdateForm(self.request.POST)
         #elif loc == 'standards':
-        #    client = DBSession.query(MalpracticeClaims).filter_by(id=id).one()
+        #    client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
+        #    form = MalpracticeClaimsUpdateForm(self.request.POST)
+
+        if loc == 'individual':
+            client = DBSession.query(IndividInfo).filter_by(id=id).first()
+            # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
+            full_name = "{}, {}".format(client.last_name, client.first_name)
+            self.full_name = full_name
+        elif loc == 'education':
+            client = DBSession.query(EducationBackground).filter_by(id=id).first()
+        elif loc == 'professional':
+            client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
+        elif loc == 'history':
+            client = DBSession.query(WorkHistory).filter_by(id=id).first()
+        elif loc == 'affiliations':
+            client = DBSession.query(Hospital).filter_by(id=id).first()
+        elif loc == 'references':
+            client = DBSession.query(IndividInfo).filter_by(id=id).first()
+        elif loc == 'insurancecoverage':
+            client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
+        elif loc == 'callcoverage':
+            client = DBSession.query(CallCoverage).filter_by(id=id).first()
+        elif loc == 'location':
+            client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
+        elif loc == 'disclosure':
+            client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
+        elif loc == 'standards':
+            client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
 
 
         # Getting the alternative name for use in printing
-        #mapper = inspect(client)
+        # Douglas, for some reason client_map.c.key() acts as if there are no values
+        #   in the view despite client.__mapper__.c.keys() returning everything fine.
+        #client_insp = inspect(client).mapper
+        #client_map= client_insp.mapper
         #docs = []
         #for column in mapper.attrs:
         #    docs.append(column.key)
-
-        if self.request.method == 'POST' and form.validate():
-            form.populate_obj(client)
+        
+        # Douglas, populating the form like this might be error prone
+        #if self.request.method == 'POST' and form.validate():
+        #    form.populate_obj(client)
         # Douglas, added form=form since wtforms-alchemy generates the page in a less error prone way
-        return dict(client=client,form=form, title=self.full_name, uid=id, loc=loc)
+        #   Have since removed form=form since the better way to display the items is through a proper query
+        return dict(client=client, title=self.full_name, uid=id, loc=loc)
     
     # Douglas, this should be an existing application page
     # Douglas, removed permission='edit'
     @view_config(route_name='clientpage_edit',
                 renderer='templates/clientpage_addedit.jinja2')
     def clientpage_edit(self):
-        #uid = int(self.request.matchdict['uid'])
-        # page = DBSession.query(Page).filter_by(uid=uid).one()
-        #title = 'Edit ' + page.title
         
         # Get the user id of the practitioner, the section to edit, and query for data pertaining to the user
         id = self.request.matchdict['uid']
@@ -284,37 +280,37 @@ class ClientViews(object):
         # Query with first() as not to return an error if information is missing
         if loc == 'individual':
             client = DBSession.query(IndividInfo).filter_by(id=id).first()
-            form = IndividInfoUpdateForm(self.request.POST)
+            form = IndividInfoUpdateForm(self.request.POST, client) or IndividInfoForm()
         elif loc == 'education':
             client = DBSession.query(EducationBackground).filter_by(id=id).first()
-            form = EducationBackgroundUpdateForm(self.request.POST)
+            form = EducationBackgroundUpdateForm(self.request.POST, client) or EducationBackgroundForm()
         elif loc == 'professional':
             client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
-            form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST)
+            form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST, client) or ProfessionalSpecialtyInfoForm()
         elif loc == 'history':
             client = DBSession.query(WorkHistory).filter_by(id=id).first()
-            form = WorkHistoryUpdateForm(self.request.POST)
+            form = WorkHistoryUpdateForm(self.request.POST, client) or WorkHistoryForm()
         elif loc == 'affiliations':
             client = DBSession.query(Hospital).filter_by(id=id).first()
-            form = HospitalUpdateForm(self.request.POST)
+            form = HospitalUpdateForm(self.request.POST, client) or HospitalForm()
         elif loc == 'references':
             client = DBSession.query(IndividInfo).filter_by(id=id).first()
-            form = IndividInfoUpdateForm(self.request.POST)
+            form = IndividInfoUpdateForm(self.request.POST, client) or IndividInfoForm()
         elif loc == 'insurancecoverage':
             client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
-            form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST)
+            form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST, client) or ProfessionalLiabilityInsuranceCoverageForm()
         elif loc == 'callcoverage':
             client = DBSession.query(CallCoverage).filter_by(id=id).first()
-            form = CallCoverageUpdateForm(self.request.POST)
+            form = CallCoverageUpdateForm(self.request.POST, client) or CallCoverageForm()
         elif loc == 'location':
             client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
-            form = PracticeLocationInfoUpdateForm(self.request.POST)
+            form = PracticeLocationInfoUpdateForm(self.request.POST, client) or PracticeLocationInfoForm()
         elif loc == 'disclosure':
             client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
-            form = DisclosureQuestionsUpdateForm(self.request.POST)
+            form = DisclosureQuestionsUpdateForm(self.request.POST, client) or DisclosureQuestionsForm()
         elif loc == 'standards':
             client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
-            form = MalpracticeClaimsUpdateForm(self.request.POST)
+            form = MalpracticeClaimsUpdateForm(self.request.POST, client) or MalpracticeClaimsForm()
 
         # WTForms
         #form = ProfileForm(request,POST,id)  
@@ -323,14 +319,17 @@ class ClientViews(object):
             form.populate_obj(client)
             # Add the changes to the DBSession
             DBSession.add(client)
-            DBSession.commit()
+            #DBSession.commit()
+            #transaction.commit()
+
             
             # Example using Flask
             #redirect('clientpage_edit')
             
-            # Douglas, not sure about this url response with a render_reponse
-            url = self.request.route_url('clientpage_view', uid=id)
+            url = self.request.route_url('client_view')
             return HTTPFound(url)
+
+        transaction.commit()
 
         
         return dict(client=client, form=form, uid=id)

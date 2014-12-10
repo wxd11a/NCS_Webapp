@@ -1,6 +1,7 @@
 {% extends 'layout.jinja2' %}
 
 {% block content %}
+<a href="{{ request.route_url('clientpage_view', uid=uid, loc=loc) }}">View</a>
 <div id="flexcontainer_row">
 	<form action="{{ request.path }}" method="POST" class="col1">
 		<ul>
@@ -9,11 +10,11 @@
 		{# {{ field_line }} #}
 
 		{% for field in form %}
-			<li>{{ field.label|safe|capitalize|replace("_", " ") }}: {{ field}}</li>
+			<li>{{ field.label|safe|capitalize|replace("_", " ") }}: {{ field }}</li>
 		{% endfor %}
 		</ul>
-		
-		{# Still need a submit button #}
+	
+		<button type="submit">Submit</button>
 	</form>	
 	<div class="col2">
 		<ul>
