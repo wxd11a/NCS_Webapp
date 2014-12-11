@@ -1,3 +1,6 @@
+import colander
+import deform
+
 import transaction
 
 from pyramid.decorator import reify
@@ -13,6 +16,8 @@ from sqlalchemy.exc import DBAPIError
 # Douglas, removed Page
 from .models import (
         DBSession,
+        Root,
+        User,
         IndividInfo,
         EducationBackground,
         PostGrad,
@@ -36,6 +41,7 @@ from .models import (
         )
 
 from .forms import (
+    UserForm,
     IndividInfoForm,
     IndividInfoUpdateForm,
     EducationBackgroundForm,
@@ -94,8 +100,9 @@ class ClientViews(object):
         self.renderer = get_renderer("templates/layout.jinja2")
         #self.uid = ''
         self.full_name = ''
+        self.temp_id = '1'
         #self.layout = renderer.implementation().macros['layout']
-        #self.logged_in = authenticated_userid(request)
+        self.logged_in = authenticated_userid(request)
     
     # Douglas, old Colander/Deform form generation
     #@reify
@@ -114,25 +121,80 @@ class ClientViews(object):
     def client_view(self):
         #pages = DBSession.query(Page).order_by(Page.title)
         clients = DBSession.query(IndividInfo).order_by(IndividInfo.last_name)
+        
+        # Search functionality
+        #if self.request.method == 'POST' and form.validate():
+
         #return dict(title='Welcome to the Client Page', pages=pages)
         return dict(title='Client List',clients=clients)
 
     # Douglas, clientpage_add should add a new application
     @view_config(route_name='clientpage_add',
-                permission='edit',
+                #permission='edit',
                 renderer='templates/clientpage_addedit.jinja2')
     def clientpage_add(self):
         # Douglas, may need to pass a var into this so we know the type of form which needs to be created
+            
+        #loc = self.request.matchdict['loc']
+        loc = 'individual'
         
-        form = RegistrationForm(self.request.POST)
-        if self.request.method == 'POST' and form.validate():
-            client = IndividInfo()
-            #user.username = form.username.data
-            #user.email = form.email.data
-            #user.save()
-            #redirect('register')
 
-        return self.renderer('clientpage_addedit', form=form)
+        # Create a new user with placeholder data
+        self.temp_id = '{}'.format(int(self.temp_id)+1)
+        id = self.temp_id
+        model = IndividInfo(id=self.temp_id)
+        DBSession.add(model)
+
+        # find the ID:
+        client = DBSession.query(IndividInfo).filter_by(id=id).first()
+        id = client.id
+        model = EducationBackground(id=id)
+        DBSession.add(model)
+        model = PostGrad(id=id)
+        DBSession.add(model)
+        model = LicenseCertificate(id=id)
+        DBSession.add(model)
+        #model = LicenseTypes(id=id)
+        #DBSession.add(model)
+        model = ProfessionalSpecialtyInfo(id=id)
+        DBSession.add(model)
+        model = WorkHistory(id=id)
+        DBSession.add(model)
+        model = Hospital(id=id)
+        DBSession.add(model)
+        model = ProfessionalLiabilityInsuranceCoverage(id=id)
+        DBSession.add(model)
+        model = CallCoverage(id=id)
+        DBSession.add(model)
+        model = PracticeLocationInfo(id=id)
+        DBSession.add(model)
+        #model = Certs(id=id)
+        #DBSession.add(model)
+        #model = AddOfficeProcedures(id=id)
+        #DBSession.add(model)
+        #model = DisclosureQuestions(id=id)
+        #DBSession.add(model)
+        #model = DisclosureQuestionsExplainations(id=id)
+        #DBSession.add(model)
+        model = MalpracticeClaims(id=id)
+        DBSession.add(model)
+
+        transaction.commit()
+
+        #form = IndividInfoUpdateForm(self.request.POST, client) or IndividInfoForm()
+        #if self.request.method == 'POST' and form.validate():
+        #    form.populate_obj(client)
+
+
+        url = self.request.route_url('clientpage_edit', uid=id, loc=loc)
+        return HTTPFound(url)
+
+        #transaction.commit()
+
+        
+       # return dict(client=client, form=form, uid=id, loc=loc)
+
+        #return self.renderer('clientpage_addedit', form=form, id=id, loc='individual')
 
 
         # Douglas, previous form call
@@ -188,42 +250,6 @@ class ClientViews(object):
         #client = DBSession.query(IndividInfo).filter_by(id=id).one()
 
         # Query with first() as not to return an error if information is missing
-        #if loc == 'individual':
-        #    client = DBSession.query(IndividInfo).filter_by(id=id).first()
-        #    full_name = "{}, {}".format(client.last_name, client.first_name)
-        #    self.full_name = full_name
-        #    form = IndividInfoUpdateForm(self.request.POST)
-        #elif loc == 'education':
-        #    client = DBSession.query(EducationBackground).filter_by(id=id).first()
-        #    form = EducationBackgroundUpdateForm(self.request.POST)
-        #elif loc == 'professional':
-        #    client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
-        #    form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST)
-        #elif loc == 'history':
-        #    client = DBSession.query(WorkHistory).filter_by(id=id).first()
-        #    form = WorkHistoryUpdateForm(self.request.POST)
-        #elif loc == 'affiliations':
-        #    client = DBSession.query(Hospital).filter_by(id=id).first()
-        #    form = HospitalUpdateForm(self.request.POST)
-        #elif loc == 'references':
-        #    client = DBSession.query(IndividInfo).filter_by(id=id).first()
-        #    form = IndividInfoUpdateForm(self.request.POST)
-        #elif loc == 'insurancecoverage':
-        #    client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
-        #    form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST)
-        #elif loc == 'callcoverage':
-        #    client = DBSession.query(CallCoverage).filter_by(id=id).first()
-        #    form = CallCoverageUpdateForm(self.request.POST)
-        #elif loc == 'location':
-        #    client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
-        #    form = PracticeLocationInfoUpdateForm(self.request.POST)
-        #elif loc == 'disclosure':
-        #    client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
-        #    form = DisclosureQuestionsUpdateForm(self.request.POST)
-        #elif loc == 'standards':
-        #    client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
-        #    form = MalpracticeClaimsUpdateForm(self.request.POST)
-
         if loc == 'individual':
             client = DBSession.query(IndividInfo).filter_by(id=id).first()
             # Creating a full_name from the currently selected practitioner and assigning it to title in the dict()
@@ -250,10 +276,48 @@ class ClientViews(object):
         elif loc == 'standards':
             client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
 
+        #if loc == 'individual':
+        #    client = DBSession.query(IndividInfo).filter_by(id=id).first()
+        #    # Creating a full_name from the currently selected practitioner
+        #    full_name = "{}, {}".format(client.last_name, client.first_name)
+        #    self.full_name = full_name
+        #    form = IndividInfoUpdateForm(self.request.POST, client) or IndividInfoForm()
+        #elif loc == 'education':
+        #    client = DBSession.query(EducationBackground).filter_by(id=id).first()
+        #    form = EducationBackgroundUpdateForm(self.request.POST, client) or EducationBackgroundForm()
+        #elif loc == 'professional':
+        #    client = DBSession.query(ProfessionalSpecialtyInfo).filter_by(id=id).first()
+        #    form = ProfessionalSpecialtyInfoUpdateForm(self.request.POST, client) or ProfessionalSpecialtyInfoForm()
+        #elif loc == 'history':
+        #    client = DBSession.query(WorkHistory).filter_by(id=id).first()
+        #    form = WorkHistoryUpdateForm(self.request.POST, client) or WorkHistoryForm()
+        #elif loc == 'affiliations':
+        #    client = DBSession.query(Hospital).filter_by(id=id).first()
+        #    form = HospitalUpdateForm(self.request.POST, client) or HospitalForm()
+        #elif loc == 'references':
+        #    client = DBSession.query(IndividInfo).filter_by(id=id).first()
+        #    form = IndividInfoUpdateForm(self.request.POST, client) or IndividInfoForm()
+        #elif loc == 'insurancecoverage':
+        #    client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
+        #    form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST, client) or ProfessionalLiabilityInsuranceCoverageForm()
+        #elif loc == 'callcoverage':
+        #    client = DBSession.query(CallCoverage).filter_by(id=id).first()
+        #    form = CallCoverageUpdateForm(self.request.POST, client) or CallCoverageForm()
+        #elif loc == 'location':
+        #    client = DBSession.query(PracticeLocationInfo).filter_by(id=id).first()
+        #    form = PracticeLocationInfoUpdateForm(self.request.POST, client) or PracticeLocationInfoForm()
+        #elif loc == 'disclosure':
+        #    client = DBSession.query(DisclosureQuestions).filter_by(id=id).first()
+        #    form = DisclosureQuestionsUpdateForm(self.request.POST, client) or DisclosureQuestionsForm()
+        #elif loc == 'standards':
+        #    client = DBSession.query(MalpracticeClaims).filter_by(id=id).first()
+        #    form = MalpracticeClaimsUpdateForm(self.request.POST, client) or MalpracticeClaimsForm()
+
 
         # Getting the alternative name for use in printing
         # Douglas, for some reason client_map.c.key() acts as if there are no values
         #   in the view despite client.__mapper__.c.keys() returning everything fine.
+        #   Douglas, That's because you have to create the mapper before instanciating the object
         #client_insp = inspect(client).mapper
         #client_map= client_insp.mapper
         #docs = []
@@ -262,10 +326,10 @@ class ClientViews(object):
         
         # Douglas, populating the form like this might be error prone
         #if self.request.method == 'POST' and form.validate():
-        #    form.populate_obj(client)
+        #form.populate_obj(client)
         # Douglas, added form=form since wtforms-alchemy generates the page in a less error prone way
         #   Have since removed form=form since the better way to display the items is through a proper query
-        return dict(client=client, title=self.full_name, uid=id, loc=loc)
+        return dict(client=client,title=self.full_name, uid=id, loc=loc)
     
     # Douglas, this should be an existing application page
     # Douglas, removed permission='edit'
@@ -298,7 +362,7 @@ class ClientViews(object):
             form = IndividInfoUpdateForm(self.request.POST, client) or IndividInfoForm()
         elif loc == 'insurancecoverage':
             client = DBSession.query(ProfessionalLiabilityInsuranceCoverage).filter_by(id=id).first()
-            form = ProfessionalLiabilityInsuraceCoverageUpdateForm(self.request.POST, client) or ProfessionalLiabilityInsuranceCoverageForm()
+            form = ProfessionalLiabilityInsuranceCoverageUpdateForm(self.request.POST, client) or ProfessionalLiabilityInsuranceCoverageForm()
         elif loc == 'callcoverage':
             client = DBSession.query(CallCoverage).filter_by(id=id).first()
             form = CallCoverageUpdateForm(self.request.POST, client) or CallCoverageForm()
@@ -326,13 +390,13 @@ class ClientViews(object):
             # Example using Flask
             #redirect('clientpage_edit')
             
-            url = self.request.route_url('client_view')
+            url = self.request.route_url('clientpage_edit', uid=id, loc=loc)
             return HTTPFound(url)
 
-        transaction.commit()
+        #transaction.commit()
 
         
-        return dict(client=client, form=form, uid=id)
+        return dict(client=client, form=form, uid=id, loc=loc)
             
         
         # Douglas, old Colander/Deform forms
@@ -366,11 +430,17 @@ class ClientViews(object):
     @view_config(route_name='login', renderer='templates/login.jinja2')
     @forbidden_view_config(renderer='templates/login.jinja2')
     def login(self):
+
+        #form = UserForm()
+        #if self.request.method == 'POST' and form.validate():
+        #    url = self.request.route_url('login')
+        #    return HTTPFound(url)
+
         request = self.request
         login_url = request.route_url('login')
         referrer = request.url
         if referrer == login_url:
-            referrer = '/' # never use login form itself as came_from
+            referrer = '/' # never use login from itself as came_from
         came_from = request.params.get('came_from', referrer)
         message = ''
         login = ''

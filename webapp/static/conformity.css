@@ -67,7 +67,9 @@ body {
  Text styles
  *
  */
- 
+title {
+	color: white;
+}	
 h1, h2, h3, h4, h5, h6, p {
 
 }
@@ -90,6 +92,7 @@ h3 {
 
 h3.title {
 	font-weight: normal;
+	color: white;
 
 	margin: 0px;
 }
@@ -367,6 +370,11 @@ nav {
 
 }
 
+a {
+	font-weight: bold;
+	text-decoration: none;
+}
+
 nav a {
 	/*color: rgb(66,114,167);*/
 	color: rgb(62,130,204);
@@ -491,6 +499,30 @@ nav > #link5 {
 		flex: 3 1 60%;
 	-webkit-order: 1;
 		order: 2;
+}
+
+ul {
+	list-style-type: none;
+}
+
+li > textarea {
+	width: 200px;
+	height: 20px;
+}	
+
+.textbox textarea {
+	width: 200px;
+	height: 20px;
+}
+
+#editview {
+	width: 40px;
+	border: 1px solid;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	background-color: #F5F5DC;
 }
 
 /* transitions to next image smoothly */

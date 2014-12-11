@@ -1,15 +1,23 @@
-<div metal:use-macro="view.layout">
-	<div metal:fill-slot="content">
-		<h4>Login</h4>
-		<span tal:replace="message"/>
+{% extends 'layout.jinja2' %}
+{% block content %}
+<h4>Login</h4>
 
-		<form action="${url}" method="post">
-			<input type="hidden" name="came_from" value="${came_from}"/>
+	<form action="{{request.url}}" method="POST">
+		<div>{{ form.username.label }}: {{ form.username() }}</div>
+		<div>{{ form.password.label }}: {{ form.password()</div>
+	</form>
+
+
+
+		{#<span tal:replace="message"/>
+
+		<form action="{{url}}" method="post">
+			<input type="hidden" name="came_from" value="{{came_from}}"/>
 			<label for="login">Username</label>
-			<input type="text" id="login" name="login" value="${login}"/><br/>
+			<input type="text" id="login" name="login" value="{{login}}"/><br/>
 			<label for="password">Password</label>
-			<input type="password" id="password" name="password" value="${password}"/><br/>
+			<input type="password" id="password" name="password" value="{{password}}"/><br/>
 			<input type="submit" name="form.submitted" value="Log In"/>
-		</form>
-	</div>
-</div>
+		</form> #}
+
+{% endblock %}

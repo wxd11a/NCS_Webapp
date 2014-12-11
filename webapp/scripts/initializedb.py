@@ -14,6 +14,7 @@ from pyramid.scripts.common import parse_vars
 # Douglas, removed Page
 from ..models import (
         DBSession,
+        User,
         IndividInfo,
         EducationBackground,
         PostGrad,
@@ -68,5 +69,38 @@ def main(argv=sys.argv):
         model = IndividInfo(id=int(1), last_name='Cassingham', first_name='Scott', type_professional='anethesiologist')
         # Remember to insert a primary key for all the tables or an AttributeError will occur
         DBSession.add(model)
+        model = EducationBackground(id=int(1))
+        DBSession.add(model)
+        model = PostGrad(id=int(1))
+        DBSession.add(model)
+        model = LicenseCertificate(id=int(1))
+        DBSession.add(model)
+        model = LicenseTypes(id=int(1))
+        DBSession.add(model)
+        model = ProfessionalSpecialtyInfo(id=int(1))
+        DBSession.add(model)
+        model = WorkHistory(id=int(1))
+        DBSession.add(model)
+        model = Hospital(id=int(1))
+        DBSession.add(model)
+        model = ProfessionalLiabilityInsuranceCoverage(id=int(1))
+        DBSession.add(model)
+        model = CallCoverage(id=int(1))
+        DBSession.add(model)
+        model = PracticeLocationInfo(id=int(1))
+        DBSession.add(model)
+        model = Certs(id=int(1))
+        DBSession.add(model)
+        model = AddOfficeProcedures(id=int(1))
+        DBSession.add(model)
+        model = DisclosureQuestions(id=int(1))
+        DBSession.add(model)
+        model = DisclosureQuestionsExplainations(id=int(1))
+        DBSession.add(model)
+        model = MalpracticeClaims(id=int(1))
+        DBSession.add(model)
+
+        # User
+        model = User(name='John', password='Doe')
         #transaction.manager.commit()
 

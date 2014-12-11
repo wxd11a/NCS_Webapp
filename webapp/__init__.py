@@ -3,23 +3,24 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 
 from sqlalchemy import engine_from_config
+from sqlalchemy.interfaces import PoolListener
 
 from .models import DBSession, Base
 
 from .security import groupfinder
 
-#from .models import (
-#    DBSession,
-#    Base,
-#    )
-#
+
+# Douglas, SQLite doesn't support integrity constraints by default
+class ForeignKeysListener(PoolListener):
+    def connect(self, dbapi_conn, conn_record):
+        db_cursor = dbapi_conn.execute('pragma foreign_keys=ON')
 
 # Douglas, Use Beaker and not the default session API
 # Douglas, Use Bcrypt for passwords
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    engine = engine_from_config(settings, 'sqlalchemy.')
+    engine = engine_from_config(settings, 'sqlalchemy.', listeners=[ForeignKeysListener()])
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     config = Configurator(settings=settings,

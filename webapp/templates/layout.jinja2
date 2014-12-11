@@ -7,15 +7,22 @@
 	<link rel="stylesheet" href="{{'webapp:static/conformity.css'|static_url}}"/>
 </head>
 <body>
-	{#	<div id="loginout">
-		<a tal:condition="view.logged_in is not None" href="${request.application_url}/logout">Logout</a>
-		<a tal:condition="view.logged_in is None" href="${request.application_url}/login">Log In</a>
-	</div> #}
+		<div id="loginout">
+			{% if view.logged_in is defined %}
+			<a href="{{ request.application_url}}/logout">Logout</a>
+			{% else %}
+			<a href="{{ request.application_url}}/login">Log In</a>
+			{% endif %}
+
+
+		{#<a tal:condition="view.logged_in is not None" href="${request.application_url}/logout">Logout</a> #}
+		{# <a tal:condition="view.logged_in is None" href="${request.application_url}/login">Log In</a>#}
+	</div> 
 
 	<div id="main">
 		<h1>
 			<a href="{{request.route_url('client_view')}}">
-				<img src="{{request.static_url('webapp:static/pyramid.png')}}" alt="Logo"/></a>
+				<img src="{{request.static_url('webapp:static/NCS.png')}}" alt="Logo"/></a>
 			{{title}}</h1>
 		{% block content %}{% endblock %}
 

@@ -1,8 +1,9 @@
 {% extends 'layout.jinja2' %}	
 {% block content %}
 		<div id=main>
+			<div id="editview"><a href="{{request.route_url('clientpage_add', loc='individual')}}">Add</a></div>
 			<div class="col_st">
-				<ul>
+				<ul class="list-style-type:none;">
 					{# iterate through all of the clients with links to their pages #}
 					{% for client in clients %}
 					<li class='clients-list'><a href="{{request.route_url('clientpage_view', uid=client.id, loc='individual')}}">

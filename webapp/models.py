@@ -15,6 +15,10 @@ from sqlalchemy import (
     DateTime
     )
 
+from sqlalchemy_utils import PasswordType
+
+# Since SQLite doesn't support integrity constraints
+#from sqlalchemy.engine import Engine
 from sqlalchemy.orm import relationship, backref
 
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -36,6 +40,14 @@ from zope.sqlalchemy import ZopeTransactionExtension
 # It will also open and close database connections for us transparently when needed.
 # http://pyramid-blogr.readthedocs.org/en/latest/basic_models.html
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+
+# Douglas, SQLite doesn't support integrity constraints by default
+#@event.listens_for(Engine, "connect")
+#def set_sqlite_pragma(dbapi_connection, connection_record):
+#    cursor = dbapi_connection.cursor()
+#    cursor.execute("PRAGMA foreign_keys=ON")
+#    cursor.close()
+
 Base = declarative_base()
 # Douglas, trying out AutomapBase which actually includes the declarative_base()
 #Base = automap_base()
@@ -134,9 +146,8 @@ class IndividInfo(Base):
 class EducationBackground(Base):
     __tablename__ = 'education_background'
 
-    # Douglas, added the id since edu_id is the FK. Changed edu_id to app_id since that is what it references
-    id = Column(Integer, primary_key=True)
-    app_id = Column(Integer, ForeignKey('individ_info.id'))
+    id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
+    #app_id = Column(Integer, ForeignKey('individ_info.id'))
     professional_degree_institution = Column(Text)
     institution_address = Column(Text)
     institution_city = Column(Text)
@@ -170,8 +181,8 @@ class PostGrad(Base):
 class IndividPostGrad(Base):
     __tablename__ = 'individ_pg'
 
-    ind_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-    pg_id = Column(Integer, ForeignKey('post_grad.id'), primary_key=True)
+    ind_id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
+    pg_id = Column(Integer, ForeignKey('post_grad.id', onupdate="CASCADE"), primary_key=True)
 
     # bidirecitonal attribute/collection of individ_info/individ_pg
     individ_info = relationship(IndividInfo,
@@ -211,7 +222,7 @@ class LicenseCertificate(Base):
 class LicenseTypes(Base):
     __tablename__ = 'license_types'
 
-    id = Column(Integer, ForeignKey('license_certificate.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('license_certificate.id', onupdate="CASCADE"), primary_key=True)
     license_type = Column(Text)
     license_number = Column(Text)
     license_registration = Column(Text)
@@ -224,8 +235,8 @@ class LicenseTypes(Base):
 class IndividLicense(Base):
     __tablename__ = 'individ_license'
 
-    l_id = Column(Integer, ForeignKey('license_certificate.id'), primary_key=True)
-    i_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    l_id = Column(Integer, ForeignKey('license_certificate.id', onupdate="CASCADE"), primary_key=True)
+    i_id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
     # FOREIGN KEY (L_ID) REFERENCES LicenseCertificates(license_id)
     # FOREIGN KEY (I_ID) REFERENCES IndividInfo(application_id)
 
@@ -241,7 +252,7 @@ class IndividLicense(Base):
 class ProfessionalSpecialtyInfo(Base):
     __tablename__ = 'professional_specialty_info'
 
-    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
     primary_specialty = Column(Integer)
     specialty = Column(Text)
     board_certified = Column(Integer)
@@ -264,7 +275,7 @@ class ProfessionalSpecialtyInfo(Base):
 class WorkHistory(Base):
     __tablename__ = 'work_history'
 
-    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
     current_practice = Column(Integer)
     practice_name = Column(Text)
     start_date = Column(Text)
@@ -302,8 +313,8 @@ class Hospital(Base):
 class IndividHosp(Base):
     __tablename__ = 'individ_hosp'
 
-    H_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
-    I_id = Column(Integer, ForeignKey('hospital.id'), primary_key=True)
+    H_id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
+    I_id = Column(Integer, ForeignKey('hospital.id', onupdate="CASCADE"), primary_key=True)
 
     # bidirectional attribute/collection of individ_info/individ_hosps
     individ_info = relationship(IndividInfo,
@@ -317,7 +328,7 @@ class IndividHosp(Base):
 class ProfessionalLiabilityInsuranceCoverage(Base):
     __tablename__ = 'professional_liability_insurance_coverage'
 
-    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
     self_insured = Column(Integer)
     malpractice_insurance_name = Column(Text)
     malpractice_insurance_address = Column(Text)
@@ -336,7 +347,7 @@ class ProfessionalLiabilityInsuranceCoverage(Base):
 class CallCoverage(Base):
     __tablename__ = 'call_coverage'
 
-    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
     colleague_name = Column(Text)
     colleague_specialty = Column(Text)
     practice_partners_name = Column(Text)
@@ -503,7 +514,7 @@ class PracticeLocationInfo(Base):
 class IndividPracticeLocationInfo(Base):
     __tablename__ = 'individ_practice_location_info'
 
-    I_id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    I_id = Column(Integer, ForeignKey('individ_info.id'),primary_key=True)
     Lo_id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
 
     # bidirecitonal attribute/collection of individ_info/individ_practice_location_info
@@ -518,34 +529,34 @@ class IndividPracticeLocationInfo(Base):
 class Certs(Base):
     __tablename__ = 'certs'
 
-    id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('practice_location_info.id', onupdate="CASCADE"), primary_key=True)
     name = Column(Text)
     type = Column(Text)
 
 class AddOfficeProcedures(Base):
     __tablename__ = 'add_office_procedures'
 
-    id = Column(Integer, ForeignKey('practice_location_info.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('practice_location_info.id', onupdate="CASCADE"), primary_key=True)
     description = Column(Text)
 
 class DisclosureQuestions(Base):
     __tablename__ = 'disclosure_questions'
     
     # Douglas, should id also be a primary key since it is a fk to individ_id?
-    id = Column(Integer, ForeignKey('individ_info.id'))
+    id = Column(Integer, ForeignKey('individ_info.id'), onupdate="CASCADE")
     question_number = Column(Integer, primary_key=True)
     question_answer = Column(Integer)
 
 class DisclosureQuestionsExplainations(Base):
     __tablename__ = 'disclosure_questions_explainations'
-    # Douglas, should I just name explaination_number to id to be consistent? Probably.
-    id = Column(Integer, ForeignKey('disclosure_questions.question_number'), primary_key=True)
+
+    id = Column(Integer, ForeignKey('disclosure_questions.question_number', onupdate="CASCADE"), primary_key=True)
     question_explaination = Column(Text)
 
 class MalpracticeClaims(Base):
     __tablename__ = 'malpractice_claims'
 
-    id = Column(Integer, ForeignKey('individ_info.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('individ_info.id', onupdate="CASCADE"), primary_key=True)
     incident_date = Column(Text)
     date_filed = Column(Text)
     claim_status = Column(Text)
@@ -574,3 +585,10 @@ class Root(object):
 
     def __init__(self, request):
         pass
+
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(Unicode(100), nullable=False)
+    password = Column(PasswordType(schemes=["pbkdf2_sha512"]), nullable=False)

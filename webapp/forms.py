@@ -3,6 +3,7 @@ from wtforms.fields import FormField
 from wtforms_components import DateField
 from .models import (
         DBSession,
+        User,
         IndividInfo,
         EducationBackground,
         PostGrad,
@@ -224,4 +225,12 @@ class MalpracticeClaimsUpdateForm(MalpracticeClaimsForm):
     @classmethod
     def get_session(self):
         return self.DBSession
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+
+#class LoginForm(Form):
+#    username = TextField('Username')
+#    password = PasswordField('Password')
 
